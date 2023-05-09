@@ -1,11 +1,27 @@
-import {Form, Outlet} from "react-router-dom";
+import {
+    Form,
+    Outlet,
+    redirect,
+} from "react-router-dom";
 import {FixedTaskList} from "../components/FixedTaskList.jsx";
 import {UserAppendedTaskList} from "../components/UserAppendedTaskList.jsx";
+
+import {createTaskList, getTaskLists} from "../tasks.js";
+
+export async function action() {
+    const taskList = await createTaskList();
+    return { taskList };
+}
+
+export async function loader() {
+    const taskLists = await getTaskLists();
+    return {taskLists};
+}
 
 export default function Root() {
     return (
         <>
-            <div id='sidebar' className='w-1/5 bg-light_bg_color h-screen border-2 flex flex-col'>
+            <div id='sidebar' className='w-1/5 bg-light_bg_color h-screen border-2 flex flex-col min-w-max'>
                 <div id='nav-header' className='h-1/4'>
                     <div id="user-info"></div>
                     <div id="search-bar"></div>

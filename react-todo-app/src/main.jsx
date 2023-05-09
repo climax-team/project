@@ -4,25 +4,37 @@ import {
     createBrowserRouter,
     RouterProvider,
 } from "react-router-dom";
-import Root from './routes/Root.jsx'
 
 import './styles/index.css'
-import {Task} from "./routes/Task.jsx";
 import {DailyTasks} from "./routes/DailyTasks.jsx";
 import {Important} from "./routes/Important.jsx";
 import {Plan} from "./routes/Plan.jsx";
 import {AboutMe} from "./routes/AboutMe.jsx";
 import {TasksNavItem} from "./routes/Tasks-nav-item.jsx";
 
+
+import Task, {
+    loader as taskListLoader,
+} from "./routes/Task.jsx";
+
+import Root, {
+    loader as rootLoader,
+    action as rootAction,
+} from "./routes/Root.jsx";
+
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Root/>,
+        action: rootAction,
+        loader: rootLoader,
         children: [
             {
                 path: "/task/:taskId",
                 element: <Task/>,
+                loader: taskListLoader,
             },
+
             {
                 path: "/task/daily-tasks",
                 element: <DailyTasks/>
@@ -42,7 +54,8 @@ const router = createBrowserRouter([
             {
                 path: "/task/tasks",
                 element: <TasksNavItem/>
-            }
+            },
+
         ]
     },
 ]);

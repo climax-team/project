@@ -36,15 +36,12 @@ export default function Login() {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        console.log(email);
-        console.log(password);
-        console.log(auth);
-
         await signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-
-                console.log(user);
+                sessionStorage.setItem('userName', user.displayName);
+                sessionStorage.setItem('userEmail', user.email);
+                sessionStorage.setItem('userUid', user.uid);
             })
             .catch((error) => {
                 const errorCode = error.code;

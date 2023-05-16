@@ -13,7 +13,7 @@ export default function SignIn(){
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
 
-    function handleSubmit(e){
+    function handleSubmit(e) {
         e.preventDefault();
 
         if (password !== repeatPassword){

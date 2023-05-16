@@ -1,5 +1,4 @@
 import localforage from "localforage";
-import {matchSorter} from "match-sorter";
 import sortBy from "sort-by";
 
 
@@ -18,9 +17,6 @@ export async function createTaskList() {
 export async function getTaskLists(query) {
     let taskLists = await localforage.getItem("taskLists");
     if (!taskLists) taskLists = [];
-    // if (query) {
-    //     taskLists = matchSorter(taskLists, query, { keys: ["first", "last"] });
-    // }
     return taskLists.sort(sortBy("last", "createdAt"));
 }
 

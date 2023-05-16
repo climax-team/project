@@ -1,19 +1,18 @@
+import React, {useEffect, useId, useState} from "react";
 import {
     Form,
     Outlet,
 } from "react-router-dom";
+import {useNavigate} from "react-router";
+
+import {createTaskList, getTaskLists} from "../taskListControler.js";
+import {ReactComponent as BAccountCircle} from '../assets/big-account-circle.svg'
 import {FixedTaskList} from "../components/FixedTaskList.jsx";
 import {UserAppendedTaskList} from "../components/UserAppendedTaskList.jsx";
 
-import {createTaskList, getTaskLists} from "../tasks.js";
-import React, {useState} from "react";
-import {ReactComponent as BAccountCircle} from '../assets/big-account-circle.svg'
-import {signOut} from "firebase/auth";
-import {useNavigate} from "react-router";
-
 import {auth, FirestoreDB} from "../firebase-config.js";
-import {doc, getDoc} from "firebase/firestore";
-
+import {collection, getDocs, getDoc, doc} from "firebase/firestore";
+import {signOut} from "firebase/auth";
 
 export async function action() {
     const taskList = await createTaskList();
@@ -25,12 +24,8 @@ export async function loader() {
     return {taskLists};
 }
 
-
 export default function Root() {
-    const [showFlyout, setShowFlyout] = useState(false);
     const navigate = useNavigate();
-    const [flyoutPosition, setFlyoutPosition] = useState({x: 0, y: 0});
-
 
     function handleLogOut() {
         signOut(auth).then(() => {
@@ -42,6 +37,7 @@ export default function Root() {
         })
     }
 
+    const [flyoutPosition, setFlyoutPosition] = useState({x: 0, y: 0});
     const showflyout = (event) => {
         event.preventDefault();
         const xPos = event.clientX;
@@ -50,42 +46,26 @@ export default function Root() {
         setShowFlyout(true);
     };
 
+    const [showFlyout, setShowFlyout] = useState(false);
     const handleDeleteFlyout = () => {
         setShowFlyout(false);
     };
 
 
-    const user = auth.currentUser;
-    const displayName = user.displayName;
-    const email = user.email;
-    const uid = user.uid;
+    const [userData, setUserData] = useState({});
+    const uid = sessionStorage.getItem('userUid');
+    const userInfoDocRef = doc(FirestoreDB, "user", uid);
 
-
-    const getUserCol = FirestoreDB.collection("user").doc(uid).get();
-
-    const userNick = "asdfa";
-
-    async function handleNewClick() {
-        const userCollection = doc(FirestoreDB, "user", uid);
-        const docSnap = await getDoc(userCollection);
-        if (displayName === null) {
-            const RepresentUserName = docSnap.data().userName;
-            console.log(RepresentUserName);
+    useEffect(() => {
+        async function getUser() {
+            const userInfoDocSnap = await getDoc(userInfoDocRef);
+            setUserData(
+                userInfoDocSnap.data().userData
+            );
         }
 
-        //
-        // const docRef = doc(FirestoreDB, "userTaskLists", uid);
-        // const docSnap = await getDoc(docRef);
-        //
-        // if (docSnap.exists()) {
-        //     console.log("Document data:", docSnap.data());
-        // } else {
-        //     // docSnap.data() will be undefined in this case
-        //     console.log("No such document!");
-        // }
-
-    }
-
+        getUser();
+    }, []);
 
     return (
         <>
@@ -96,16 +76,12 @@ export default function Root() {
                             <BAccountCircle/>
                             <div className='flex flex-col'>
                                 <h1 id='userName' className='text-white'>
-                                    {userNick === null ?
-                                        displayName !== null ?
-                                            {displayName}
-                                            :
-                                            "user name not found"
+                                    {sessionStorage.getItem('userName') !== "null" ?
+                                        sessionStorage.getItem('userName')
                                         :
-                                        {userNick}
-                                    }
+                                        userData.userName}
                                 </h1>
-                                <h3 id='userEmail' className='text-white'>{email}</h3>
+                                <h3 id='userEmail' className='text-white'>{sessionStorage.getItem('userEmail')}</h3>
                             </div>
                         </div>
                         {showFlyout && (
@@ -116,7 +92,6 @@ export default function Root() {
                                 <button onClick={handleLogOut}>
                                     log out
                                 </button>
-
                                 <button onClick={handleDeleteFlyout}>* x *</button>
                             </div>
                         )}

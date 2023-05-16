@@ -1,5 +1,5 @@
 import {useLoaderData} from "react-router-dom";
-import {getTaskLists} from "../tasks.js";
+import {getTaskLists} from "../taskListControler.js";
 
 export async function loader({ params }) {
 	const taskList = await getTaskLists(params.taskId);

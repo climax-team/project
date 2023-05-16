@@ -2,10 +2,14 @@ import localforage from "localforage";
 import {matchSorter} from "match-sorter";
 import sortBy from "sort-by";
 
+
 export async function createTaskList() {
     let id = Math.random().toString(36).substring(2, 9);
     let taskList = { id, createdAt: Date.now() };
     let taskLists = await getTaskLists();
+
+
+
     taskLists.unshift(taskList);
     await set(taskLists);
     return taskList;

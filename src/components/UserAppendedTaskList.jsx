@@ -3,12 +3,11 @@ import {
 	useLoaderData
 } from "react-router-dom";
 import {ReactComponent as MoreOption} from '../assets/more-option.svg'
-import {useEffect, useState} from "react";
-import {doc, getDoc} from "firebase/firestore";
-import {FirestoreDB} from "../firebase-config.js";
+import { useState} from "react";
+
 
 export function UserAppendedTaskList() {
-	const { taskLists } = useLoaderData();
+	const { userTaskLists } = useLoaderData();
 
 	const [flyoutPosition, setFlyoutPosition] = useState({ x: 0, y: 0 });
 	const showflyout = (event) => {
@@ -19,48 +18,32 @@ export function UserAppendedTaskList() {
 		setShowFlyout(true);
 	};
 
-	
 	const [showFlyout, setShowFlyout] = useState(false);
 	const handleDeleteFlyout = () => {
 		setShowFlyout(false);
 	};
 
 
-	const [userAddedTaskLists, setUserAddedTaskLists] = useState({});
-	const uid = sessionStorage.getItem('userUid');
-	const TaskListsDocRef = doc(FirestoreDB, "userTaskLists", uid);
+	const [userAddedTaskLists, setUserAddedTaskLists] = useState([]);
 
-	useEffect(() => {
-		async function getUser() {
-			const TaskListDocSnap = await getDoc(TaskListsDocRef);
-			setUserAddedTaskLists(
-				TaskListDocSnap.data()
-			);
-		}
-		getUser();
-	}, []);
-
-	console.log(userAddedTaskLists);
-	console.log("length" + userAddedTaskLists);
-
-	const extractedObjects = Object.values(userAddedTaskLists);
-	console.log(extractedObjects);
-
+	// console.log(userAddedTaskLists);
+	// console.log(userAddedTaskLists[0].id);
+	// console.log(userAddedTaskLists[0].taskListTitle);
 
 	return (
 		<>
-			{taskLists.length ?
+			{userTaskLists.length || userAddedTaskLists !== null ?
 				(
 				<ul>
-					{taskLists.map((taskList) => (
+					{userTaskLists.map((taskList) => (
 						<li key={taskList.id}>
 							<Link to={`task/${taskList.id}`} >
 								<div className='flex' onContextMenu={showflyout}>
 								<MoreOption/>
-								{taskList.title ?
+								{taskList.taskListTitle ?
 									(
 									<>
-										{taskList.title}
+										{taskList.taskListTitle}
 									</>
 									) :
 									(

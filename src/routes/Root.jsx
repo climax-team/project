@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import {useNavigate} from "react-router";
 
-import {createTaskList, getTaskLists} from "../taskListControler.js";
+import {createTaskList, getUserAddedTaskLists} from "../taskListControler.js";
 import {ReactComponent as BAccountCircle} from '../assets/big-account-circle.svg'
 import {FixedTaskList} from "../components/FixedTaskList.jsx";
 import {UserAppendedTaskList} from "../components/UserAppendedTaskList.jsx";
@@ -20,8 +20,8 @@ export async function action() {
 }
 
 export async function loader() {
-    const taskLists = await getTaskLists();
-    return {taskLists};
+    const userTaskLists = await getUserAddedTaskLists();
+    return {userTaskLists};
 }
 
 export default function Root() {
@@ -112,9 +112,10 @@ export default function Root() {
 
                 <div id='nav-bottom-items' className='h-20 border-2 w-full '>
                     <div id="bottom-content">
-                        <Form method="post">
+                        {/*<Form method="post">*/}
+                        {/*    <button type="submit">New</button>*/}
+                        {/*</Form>*/}
                             <button type="submit">New</button>
-                        </Form>
                     </div>
                 </div>
             </div>

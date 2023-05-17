@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
     createBrowserRouter,
@@ -30,11 +30,11 @@ import MainPage from "./routes/MainPage.tsx";
 
 
 const router = createBrowserRouter([
-    {
-        index: true,
-        path: "/singInPlease",
-        element: <MainPage/>,
-    },
+    // {
+    //     index: true,
+    //     path: "/singInPlease",
+    //     element: <MainPage/>,
+    // },
 
     {
         element: <PrivateRoute authentication={false}/>,

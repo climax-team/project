@@ -1,27 +1,50 @@
 import localforage from "localforage";
-import sortBy from "sort-by";
+import {FirestoreDB} from "./firebase-config.js";
+import {doc, getDoc, Timestamp, setDoc} from "firebase/firestore";
 
 
 export async function createTaskList() {
     let id = Math.random().toString(36).substring(2, 9);
-    let taskList = { id, createdAt: Date.now() };
-    let taskLists = await getTaskLists();
+    const addedTaskList = {
+        taskList : {
+            id : id,
+            createdAt: Date.now(),
+            taskListTitle: "no name List",
+            task: {
+                taskTitle : 'title not found',
+                assignment : [],
+                RepeatCycle : null,
+                isImportant : false,
+                isLowRankListExist : false,
+                isRepeat : false,
+                lowRankTasks : [],
+                memo : "",
+                pushNotificationDateTime : Timestamp.fromDate(new Date()),
+                taskDeadLine : Timestamp.fromDate(new Date())
+            },
+        }
+    };
 
+    const uid = sessionStorage.getItem("userUid");
+    const userTaskListsRef =
+        doc(FirestoreDB, 'userTaskLists', uid);
+    await setDoc(userTaskListsRef, addedTaskList,{marge:ture});
 
-
-    taskLists.unshift(taskList);
-    await set(taskLists);
-    return taskList;
+    let userTaskLists = await getUserAddedTaskLists();
+     await set(userTaskLists);
+    return userTaskLists;
 }
 
-export async function getTaskLists(query) {
-    let taskLists = await localforage.getItem("taskLists");
-    if (!taskLists) taskLists = [];
-    return taskLists.sort(sortBy("last", "createdAt"));
+export async function getUserAddedTaskLists(query) {
+    const uid = sessionStorage.getItem('userUid');
+    const TaskListsDocRef = doc(FirestoreDB, "userTaskLists", uid);
+    const TaskListDocSnap = await getDoc(TaskListsDocRef);
+
+    return Object.values(TaskListDocSnap.data());
 }
 
-function set(taskLists) {
-    return localforage.setItem("taskLists", taskLists);
+function set(userTaskLists) {
+    return localforage.setItem("userTaskLists", userTaskLists);
 }
 
 export async function deleteContact(id) {

@@ -13,9 +13,7 @@ import {AboutMe} from "./routes/FixedTaskLists/AboutMe.jsx";
 import {TasksNavItem} from "./routes/FixedTaskLists/Tasks-nav-item.jsx";
 
 
-import Task, {
-    loader as taskListLoader,
-} from "./routes/Task.jsx";
+import Task from "./routes/Task.jsx";
 
 import Root, {
     loader as rootLoader,
@@ -63,7 +61,7 @@ const router = createBrowserRouter([
                     {
                         path: "/task/:taskId",
                         element: <Task/>,
-                        loader: taskListLoader,
+                        // loader: taskListLoader,
                     },
 
                     {

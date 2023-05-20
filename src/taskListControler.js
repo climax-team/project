@@ -28,10 +28,10 @@ export async function createTaskList() {
     const uid = sessionStorage.getItem("userUid");
     const userTaskListsRef =
         doc(FirestoreDB, 'userTaskLists', uid);
-    await setDoc(userTaskListsRef, addedTaskList,{marge:ture});
+    await setDoc(userTaskListsRef, addedTaskList, {marge: true});
 
     let userTaskLists = await getUserAddedTaskLists();
-     await set(userTaskLists);
+     //await set(userTaskLists);
     return userTaskLists;
 }
 

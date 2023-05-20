@@ -112,10 +112,9 @@ export default function Root() {
 
                 <div id='nav-bottom-items' className='h-20 border-2 w-full '>
                     <div id="bottom-content">
-                        {/*<Form method="post">*/}
-                        {/*    <button type="submit">New</button>*/}
-                        {/*</Form>*/}
+                        <Form method="post">
                             <button type="submit">New</button>
+                        </Form>
                     </div>
                 </div>
             </div>

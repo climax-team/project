@@ -1,6 +1,6 @@
 import localforage from "localforage";
 import {FirestoreDB} from "./firebase-config.js";
-import {doc, getDoc, Timestamp, setDoc} from "firebase/firestore";
+import {doc, getDoc, Timestamp, setDoc, updateDoc} from "firebase/firestore";
 
 
 export async function createTaskList() {
@@ -28,32 +28,11 @@ export async function createTaskList() {
     const uid = sessionStorage.getItem("userUid");
     const userTaskListsRef =
         doc(FirestoreDB, 'userTaskLists', uid);
-    await setDoc(userTaskListsRef, addedTaskList, {marge: true});
+    await updateDoc(userTaskListsRef, addedTaskList);
 
     let userTaskLists = await getUserAddedTaskLists();
      //await set(userTaskLists);
     return userTaskLists;
 }
 
-export async function getUserAddedTaskLists(query) {
-    const uid = sessionStorage.getItem('userUid');
-    const TaskListsDocRef = doc(FirestoreDB, "userTaskLists", uid);
-    const TaskListDocSnap = await getDoc(TaskListsDocRef);
 
-    return Object.values(TaskListDocSnap.data());
-}
-
-function set(userTaskLists) {
-    return localforage.setItem("userTaskLists", userTaskLists);
-}
-
-export async function deleteContact(id) {
-    let taskLists = await localforage.getItem("taskLists");
-    let index = taskLists.findIndex(taskList => taskList.id === id);
-    if (index > -1) {
-        taskLists.splice(index, 1);
-        await set(taskLists);
-        return true;
-    }
-    return false;
-}

@@ -3,6 +3,7 @@ import {GoogleAuthProvider, signInWithRedirect, signInWithEmailAndPassword} from
 import {useState} from "react";
 import {useNavigate} from "react-router";
 
+
 export default function Login() {
     const navigate = useNavigate();
 

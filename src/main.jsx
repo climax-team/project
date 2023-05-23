@@ -13,13 +13,13 @@ import {AboutMe} from "./routes/FixedTaskLists/AboutMe.jsx";
 import {TasksNavItem} from "./routes/FixedTaskLists/Tasks-nav-item.jsx";
 
 
-import Task from "./routes/Task.jsx";
 
 import Root, {
-    loader as rootLoader,
     action as rootAction,
 } from "./routes/Root.jsx";
+import Task from "./routes/Task.jsx";
 import PrivateRoute from "./routes/PrivateRouter.tsx";
+
 
 import Login from "./routes/auth/Login.jsx";
 import SignIn from "./routes/auth/SignIn.jsx";
@@ -28,18 +28,12 @@ import MainPage from "./routes/MainPage.tsx";
 
 
 const router = createBrowserRouter([
-    // {
-    //     index: true,
-    //     path: "/singInPlease",
-    //     element: <MainPage/>,
-    // },
-
     {
         element: <PrivateRoute authentication={false}/>,
         children: [
             {
                 path: "/login",
-                element: <Login/>
+                element: <Login/>,
             },
             {
                 path: "/signIn",
@@ -48,7 +42,6 @@ const router = createBrowserRouter([
         ]
     },
 
-
     {
         element: <PrivateRoute authentication={true}/>,
         children: [
@@ -56,12 +49,10 @@ const router = createBrowserRouter([
                 path: "/",
                 element: <Root/>,
                 action: rootAction,
-                loader: rootLoader,
                 children: [
                     {
                         path: "/task/:taskId",
                         element: <Task/>,
-                        // loader: taskListLoader,
                     },
 
                     {

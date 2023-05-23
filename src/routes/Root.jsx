@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import {useNavigate} from "react-router";
 
-import {createTaskList, getUserAddedTaskLists} from "../taskListControler.js";
+import {createTaskList} from "../taskListControler.js";
 import {ReactComponent as BAccountCircle} from '../assets/big-account-circle.svg'
 import {FixedTaskList} from "../components/FixedTaskList.jsx";
 import {UserAppendedTaskList} from "../components/UserAppendedTaskList.jsx";
@@ -17,11 +17,6 @@ import {signOut} from "firebase/auth";
 export async function action() {
     const taskList = await createTaskList();
     return {taskList};
-}
-
-export async function loader() {
-    const userTaskLists = await getUserAddedTaskLists();
-    return {userTaskLists};
 }
 
 export default function Root() {
@@ -67,6 +62,28 @@ export default function Root() {
         getUser();
     }, []);
 
+
+    let userTaskLists = [];
+    async function getUserAddedTaskLists() {
+       const uid = sessionStorage.getItem('userUid');
+        return await getDocs(collection(FirestoreDB, uid));
+    }
+
+
+    getUserAddedTaskLists().then((appData) => {
+        appData.forEach((doc) => {
+            let documentData= doc.data();
+            console.log(doc.id);
+            userTaskLists.unshift(
+                {
+                    id : doc.id,
+                    taskListTitle : documentData.taskList.taskListTitle
+                }
+            );
+        });
+    });
+
+
     return (
         <>
             <div id='sidebar' className='w-1/5 bg-light_bg_color h-screen border-2 flex flex-col min-w-max'>
@@ -106,7 +123,9 @@ export default function Root() {
                         <FixedTaskList/>
                     </div>
                     <div id="added-taskList">
-                        <UserAppendedTaskList/>
+
+                        <UserAppendedTaskList userTaskLists={userTaskLists}/>
+
                     </div>
                 </div>
 

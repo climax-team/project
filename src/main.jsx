@@ -19,6 +19,7 @@ import Root, {
 } from "./routes/Root.jsx";
 import Task from "./routes/Task.jsx";
 
+import {action as destroyAction} from "./routes/destroy";
 
 import Login from "./routes/auth/Login.jsx";
 import SignIn from "./routes/auth/SignIn.jsx";
@@ -55,11 +56,17 @@ function Main() {
             loader: rootLoader,
             children: [
                 {
-                    path: "/task/:taskId",
+                    path: "/task/:taskListId",
                     element: <Task/>,
                     //loader: taskLoader,
                     //action: taskAction,
                 },
+                {
+                    path: "contacts/:contactId/destroy",
+                    action: destroyAction,
+                    errorElement: <div>Oops! There was an error.</div>,
+                },
+
                 {
                     path: "/task/daily-tasks",
                     element: <DailyTasks/>

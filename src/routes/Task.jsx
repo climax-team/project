@@ -1,9 +1,9 @@
 import {useLoaderData} from "react-router-dom";
-import {getTaskLists} from "../taskListControler.js";
+import {getTaskList} from "../taskListControler.js";
 
 
 export async function loader({ params }) {
-	const taskList = await getTaskLists(params.taskId);
+	const taskList = await getTaskList(params.taskListId);
 	if (!taskList) {
 		throw new Response("", {
 			status: 404,

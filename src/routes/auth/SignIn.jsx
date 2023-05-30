@@ -33,7 +33,7 @@ export default function SignIn(){
 
                 await setDoc(doc(FirestoreDB, 'user', uid), userData);
                 await setDoc(doc(FirestoreDB, 'userTaskLists', uid), {});
-                navigate('/login');
+                navigate('/logIn');
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -136,7 +136,7 @@ export default function SignIn(){
 
                     <div className='w-full text-lg text-form_gray_color'>
                         <a className='hover:cursor-pointer'
-                            onClick={() => navigate('/login')}>do you already have account?</a>
+                            onClick={() => navigate('/logIn')}>do you already have account?</a>
                     </div>
 
                     <div className='w-full'>

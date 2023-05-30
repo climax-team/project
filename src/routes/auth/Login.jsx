@@ -1,7 +1,7 @@
 import {auth} from "../../firebase-config.js";
 import {GoogleAuthProvider, signInWithRedirect, signInWithEmailAndPassword} from "firebase/auth";
 import {useState} from "react";
-import {useNavigate} from "react-router";
+import {redirect, useNavigate} from "react-router";
 
 
 export default function Login() {
@@ -18,7 +18,7 @@ export default function Login() {
             })
             .catch((err) => {
                 console.log(err);
-                navigate('/login');
+                navigate('/logIn');
             });
 
         // if (auth.currentUser != null) {
@@ -27,12 +27,13 @@ export default function Login() {
         // } else {
         //     navigate('/login');
         // }
-    }
 
+        sessionStorage.setItem('isAuthenticated', 'true');
+        navigate('/');
+    }
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -43,6 +44,7 @@ export default function Login() {
                 sessionStorage.setItem('userName', user.displayName);
                 sessionStorage.setItem('userEmail', user.email);
                 sessionStorage.setItem('userUid', user.uid);
+
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -52,12 +54,11 @@ export default function Login() {
             });
 
         if (auth.currentUser != null) {
-            sessionStorage.setItem('isAuthenticated', 'true');
             navigate('/');
+            window.location.reload();
         } else {
-            navigate('/login');
+            navigate('/logIn');
         }
-
     }
 
 
@@ -67,7 +68,6 @@ export default function Login() {
                 <div className='w-1/2'>
                     <h1 className='text-3xl text-white mb-6'>Log in</h1>
                 </div>
-
                 <form className='w-1/2' id='userInput' onSubmit={handleSubmit}>
                     <input type="email"
                            name="email"
@@ -109,10 +109,9 @@ export default function Login() {
                            placeholder="plz write your password"
                            required
                     />
-
                     <div className='w-full text-lg text-form_gray_color'>
                         <a className='hover:cursor-pointer'
-                            onClick={() => navigate('/signIn')}>create account</a>
+                           onClick={() => navigate('/signIn')}>create account</a>
                     </div>
 
                     <div className='w-full'>
@@ -121,19 +120,12 @@ export default function Login() {
                         </button>
                     </div>
                 </form>
-
                 <button
-                    onClick={() => {
-                        handleGoogleLogin();
-                        sessionStorage.setItem('isAuthenticated', 'true');
-                        navigate('/');
-                    }}
+                    onClick={handleGoogleLogin}
                     className='text-white'
                 >Sign In with google
                 </button>
-
             </div>
-
         </div>
     );
 }

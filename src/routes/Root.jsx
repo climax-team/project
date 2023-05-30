@@ -3,7 +3,7 @@ import {
     Form,
     Outlet,
 } from "react-router-dom";
-import {useNavigate} from "react-router";
+import {redirect, useNavigate} from "react-router";
 
 import {createTaskList} from "../taskListControler.js";
 import {ReactComponent as BAccountCircle} from '../assets/big-account-circle.svg'
@@ -24,8 +24,8 @@ export default function Root() {
 
     function handleLogOut() {
         signOut(auth).then(() => {
-            sessionStorage.setItem('isAuthenticated', 'false');
-            navigate('/login');
+            navigate('/logIn');
+            window.location.reload()
             console.log("log-out successful");
         }).catch((error) => {
             console.error("log out something happen");
@@ -48,8 +48,9 @@ export default function Root() {
 
 
     const [userData, setUserData] = useState({});
-    const uid = sessionStorage.getItem('userUid');
-    const userInfoDocRef = doc(FirestoreDB, "user", uid);
+    const userInfoDocRef = doc(FirestoreDB, "user", auth.currentUser.uid);
+
+    console.log(auth.currentUser);
 
     useEffect(() => {
         async function getUser() {
@@ -59,7 +60,7 @@ export default function Root() {
             );
         }
 
-        getUser();
+        void getUser();
     }, []);
 
 

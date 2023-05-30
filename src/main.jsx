@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import ReactDOM from 'react-dom/client'
 import {
     createBrowserRouter,
@@ -13,75 +13,115 @@ import {AboutMe} from "./routes/FixedTaskLists/AboutMe.jsx";
 import {TasksNavItem} from "./routes/FixedTaskLists/Tasks-nav-item.jsx";
 
 
-
 import Root, {
     action as rootAction,
 } from "./routes/Root.jsx";
 import Task from "./routes/Task.jsx";
-import PrivateRoute from "./routes/PrivateRouter.tsx";
 
 
 import Login from "./routes/auth/Login.jsx";
 import SignIn from "./routes/auth/SignIn.jsx";
-import MainPage from "./routes/MainPage.tsx";
 
 
+import {auth} from "./firebase-config.js";
 
-const router = createBrowserRouter([
-    {
-        element: <PrivateRoute authentication={false}/>,
-        children: [
-            {
-                path: "/login",
-                element: <Login/>,
-            },
-            {
-                path: "/signIn",
-                element: <SignIn/>
+
+function Main() {
+    const [userObj, setUserObj] = useState(null);
+
+    useEffect(() => {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                setUserObj({
+                    displayName: user.displayName,
+                    uid: user.uid,
+                    updateProfile: (args) => user.updateProfile(args),
+                });
+            } else {
+                setUserObj(null);
             }
-        ]
-    },
+        });
 
-    {
-        element: <PrivateRoute authentication={true}/>,
-        children: [
-            {
-                path: "/",
-                element: <Root/>,
-                action: rootAction,
-                children: [
-                    {
-                        path: "/task/:taskId",
-                        element: <Task/>,
-                    },
+        // if (auth.currentUser){
+        //     setIsAuthenticated(true);
+        // }
+    }, []);
 
-                    {
-                        path: "/task/daily-tasks",
-                        element: <DailyTasks/>
-                    },
-                    {
-                        path: "/task/important",
-                        element: <Important/>
-                    },
-                    {
-                        path: "/task/plan",
-                        element: <Plan/>
-                    },
-                    {
-                        path: "/task/about-me",
-                        element: <AboutMe/>
-                    },
-                    {
-                        path: "/task/tasks",
-                        element: <TasksNavItem/>
-                    },
+    const refreshUser = () => {
+        const user = auth.currentUser;
+        setUserObj({
+            displayName: user.displayName,
+            uid: user.uid,
+            updateProfile: (args) => user.updateProfile(args),
+        });
+    };
 
-                ]
+
+    const router = createBrowserRouter([
+        {
+            path: "/",
+            element: <Root
+                refreshUser={refreshUser}
+                userObj = {userObj}
+            />,
+            action: rootAction,
+            children: [
+                {
+                    path: "/task/:taskId",
+                    element: <Task/>,
+                },
+                {
+                    path: "/task/daily-tasks",
+                    element: <DailyTasks/>
+                },
+                {
+                    path: "/task/important",
+                    element: <Important/>
+                },
+                {
+                    path: "/task/plan",
+                    element: <Plan/>
+                },
+                {
+                    path: "/task/about-me",
+                    element: <AboutMe/>
+                },
+                {
+                    path: "/task/tasks",
+                    element: <TasksNavItem/>
+                },
+
+            ]
+        }
+    ]);
+
+    const LoginRouter = createBrowserRouter([
+        {
+            path: '/',
+            element: <Loading/>
+        },
+        {
+            index: true,
+            path: "/logIn",
+            element: <Login/>,
+        },
+        {
+            path: "/signIn",
+            element: <SignIn/>
+        }
+    ])
+
+    return (
+        <>
+            {auth.currentUser ? (
+                <RouterProvider router={router} fallbackElement={<Loading/>}/>
+            ) : (
+                <RouterProvider router={LoginRouter} fallbackElement={<Loading/>}/>
+            )
             }
-        ]
-    },
-]);
-
+        </>
+    )
+}
 
 function Loading() {
     return <h1> loading .....</h1>;
@@ -89,6 +129,6 @@ function Loading() {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <RouterProvider router={router} fallbackElement={<Loading/>}/>
+        <Main />
     </React.StrictMode>,
 )

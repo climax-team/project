@@ -15,6 +15,7 @@ import {TasksNavItem} from "./routes/FixedTaskLists/Tasks-nav-item.jsx";
 
 import Root, {
     action as rootAction,
+    loader as rootLoader,
 } from "./routes/Root.jsx";
 import Task from "./routes/Task.jsx";
 
@@ -25,9 +26,9 @@ import SignIn from "./routes/auth/SignIn.jsx";
 
 import {auth} from "./firebase-config.js";
 
-
 function Main() {
     const [userObj, setUserObj] = useState(null);
+
 
     useEffect(() => {
         auth.onAuthStateChanged((user) => {
@@ -41,34 +42,23 @@ function Main() {
                 setUserObj(null);
             }
         });
-
-        // if (auth.currentUser){
-        //     setIsAuthenticated(true);
-        // }
     }, []);
-
-    const refreshUser = () => {
-        const user = auth.currentUser;
-        setUserObj({
-            displayName: user.displayName,
-            uid: user.uid,
-            updateProfile: (args) => user.updateProfile(args),
-        });
-    };
 
 
     const router = createBrowserRouter([
         {
             path: "/",
             element: <Root
-                refreshUser={refreshUser}
                 userObj = {userObj}
             />,
             action: rootAction,
+            loader: rootLoader,
             children: [
                 {
                     path: "/task/:taskId",
                     element: <Task/>,
+                    //loader: taskLoader,
+                    //action: taskAction,
                 },
                 {
                     path: "/task/daily-tasks",
@@ -123,6 +113,8 @@ function Main() {
     )
 }
 
+
+//todo styling loading page
 function Loading() {
     return <h1> loading .....</h1>;
 }

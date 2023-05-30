@@ -1,4 +1,4 @@
-import {Link,} from "react-router-dom";
+import {Link, useLoaderData,} from "react-router-dom";
 import {ReactComponent as MoreOption} from '../assets/more-option.svg'
 import {useEffect, useState} from "react";
 import {collection, getDocs} from "firebase/firestore";
@@ -6,7 +6,9 @@ import {FirestoreDB} from "../firebase-config.js";
 
 
 
-export function UserAppendedTaskList(userTaskLists) {
+export function UserAppendedTaskList() {
+    const { userAddedTaskLists } = useLoaderData();
+
 
     const [flyoutPosition, setFlyoutPosition] = useState({x: 0, y: 0});
     const showflyout = (event) => {
@@ -22,14 +24,15 @@ export function UserAppendedTaskList(userTaskLists) {
         setShowFlyout(false);
     };
 
-    console.log(Object.values(userTaskLists.userTaskLists));
+    console.log(userAddedTaskLists);
+
 
     return (
         <>
-            {Object.values(userTaskLists.userTaskLists)?
+            { userAddedTaskLists ?
                 (
                     <ul>
-                        {Object.values(userTaskLists.userTaskLists).map(taskList => (
+                        {userAddedTaskLists.map(taskList => (
                             <li key={taskList.id}>
                                 <Link to={`task/${taskList.id}`}>
                                     <div className='flex' onContextMenu={showflyout}>
@@ -41,7 +44,7 @@ export function UserAppendedTaskList(userTaskLists) {
                                                 </>
                                             ) :
                                             (
-                                                <i>No Title List</i>
+                                                <i>null</i>
                                             )
                                         }
 

@@ -1,6 +1,5 @@
-import localforage from "localforage";
-import {FirestoreDB} from "./firebase-config.js";
-import {doc, getDoc, Timestamp, setDoc, updateDoc} from "firebase/firestore";
+import {FirestoreDB, auth} from "./firebase-config.js";
+import {collection, doc, getDocs, Timestamp, updateDoc} from "firebase/firestore";
 
 
 export async function createTaskList() {
@@ -25,14 +24,35 @@ export async function createTaskList() {
         }
     };
 
-    const uid = sessionStorage.getItem("userUid");
     const userTaskListsRef =
-        doc(FirestoreDB, 'userTaskLists', uid);
+        doc(FirestoreDB, 'userTaskLists', auth.currentUser.uid);
+
     await updateDoc(userTaskListsRef, addedTaskList);
 
-    let userTaskLists = await getUserAddedTaskLists();
-     //await set(userTaskLists);
-    return userTaskLists;
+    return await getTaskLists();
 }
 
 
+
+export async function getTaskLists() {
+
+    let userTaskLists = [];
+
+    await getDocs(collection(FirestoreDB, auth.currentUser.uid)).then((appData) => {
+        appData.forEach((doc) => {
+            let documentData = doc.data();
+            console.log(doc.id);
+            userTaskLists.unshift(
+                {
+                    id: doc.id,
+                    taskListTitle: documentData.taskList.taskListTitle
+                }
+            );
+        });
+    });
+
+    console.log(userTaskLists);
+
+
+    return userTaskLists;
+}

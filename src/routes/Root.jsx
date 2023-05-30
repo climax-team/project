@@ -1,22 +1,28 @@
-import React, {useEffect, useId, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Form,
     Outlet,
+    useLoaderData,
 } from "react-router-dom";
-import {redirect, useNavigate} from "react-router";
-
-import {createTaskList} from "../taskListControler.js";
+import {useNavigate} from "react-router";
+import {createTaskList, getTaskLists} from "../taskListControler.js";
 import {ReactComponent as BAccountCircle} from '../assets/big-account-circle.svg'
 import {FixedTaskList} from "../components/FixedTaskList.jsx";
 import {UserAppendedTaskList} from "../components/UserAppendedTaskList.jsx";
 
 import {auth, FirestoreDB} from "../firebase-config.js";
-import {collection, getDocs, getDoc, doc} from "firebase/firestore";
+import { getDoc, doc} from "firebase/firestore";
 import {signOut} from "firebase/auth";
+
 
 export async function action() {
     const taskList = await createTaskList();
     return {taskList};
+}
+
+export async function loader() {
+    const userAddedTaskLists = await getTaskLists();
+    return {userAddedTaskLists};
 }
 
 export default function Root() {
@@ -32,6 +38,7 @@ export default function Root() {
         })
     }
 
+    //todo eliminate duplicate
     const [flyoutPosition, setFlyoutPosition] = useState({x: 0, y: 0});
     const showflyout = (event) => {
         event.preventDefault();
@@ -48,9 +55,8 @@ export default function Root() {
 
 
     const [userData, setUserData] = useState({});
-    const userInfoDocRef = doc(FirestoreDB, "user", auth.currentUser.uid);
 
-    console.log(auth.currentUser);
+    const userInfoDocRef = doc(FirestoreDB, "user", auth.currentUser.uid);
 
     useEffect(() => {
         async function getUser() {
@@ -62,28 +68,6 @@ export default function Root() {
 
         void getUser();
     }, []);
-
-
-    let userTaskLists = [];
-    async function getUserAddedTaskLists() {
-       const uid = sessionStorage.getItem('userUid');
-        return await getDocs(collection(FirestoreDB, uid));
-    }
-
-
-    getUserAddedTaskLists().then((appData) => {
-        appData.forEach((doc) => {
-            let documentData= doc.data();
-            console.log(doc.id);
-            userTaskLists.unshift(
-                {
-                    id : doc.id,
-                    taskListTitle : documentData.taskList.taskListTitle
-                }
-            );
-        });
-    });
-
 
     return (
         <>
@@ -99,7 +83,7 @@ export default function Root() {
                                         :
                                         userData.userName}
                                 </h1>
-                                <h3 id='userEmail' className='text-white'>{sessionStorage.getItem('userEmail')}</h3>
+                                <h3 id='userEmail' className='text-white'>{auth.currentUser.email}</h3>
                             </div>
                         </div>
                         {showFlyout && (
@@ -124,9 +108,7 @@ export default function Root() {
                         <FixedTaskList/>
                     </div>
                     <div id="added-taskList">
-
-                        <UserAppendedTaskList userTaskLists={userTaskLists}/>
-
+                        <UserAppendedTaskList/>
                     </div>
                 </div>
 

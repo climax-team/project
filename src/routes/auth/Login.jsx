@@ -21,15 +21,14 @@ export default function Login() {
                 navigate('/logIn');
             });
 
-        // if (auth.currentUser != null) {
-        //     sessionStorage.setItem('isAuthenticated', 'true');
-        //     navigate('/');
-        // } else {
-        //     navigate('/login');
-        // }
 
-        sessionStorage.setItem('isAuthenticated', 'true');
-        navigate('/');
+        if (auth.currentUser != null) {
+            navigate('/');
+            window.location.reload();
+        } else {
+            navigate('/logIn');
+        }
+
     }
 
     const [email, setEmail] = useState("");

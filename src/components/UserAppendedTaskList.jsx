@@ -9,7 +9,6 @@ import {redirect, useNavigate} from "react-router";
 
 export function UserAppendedTaskList() {
     const {userAddedTaskLists} = useLoaderData();
-    const navigate = useNavigate();
 
 
     const [flyoutPosition, setFlyoutPosition] = useState({x: 0, y: 0});

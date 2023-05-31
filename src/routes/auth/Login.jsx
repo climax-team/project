@@ -1,7 +1,8 @@
-import {auth} from "../../firebase-config.js";
+import {auth, FirestoreDB} from "../../firebase-config.js";
 import {GoogleAuthProvider, signInWithRedirect, signInWithEmailAndPassword} from "firebase/auth";
 import {useState} from "react";
 import {redirect, useNavigate} from "react-router";
+import {doc, getDoc, query, where} from "firebase/firestore";
 
 
 export default function Login() {
@@ -40,9 +41,10 @@ export default function Login() {
         await signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                sessionStorage.setItem('userName', user.displayName);
-                sessionStorage.setItem('userEmail', user.email);
-                sessionStorage.setItem('userUid', user.uid);
+                console.log(user);
+                localStorage.setItem('userName', user.displayName);
+                localStorage.setItem('userEmail', user.email);
+                localStorage.setItem('userUid', user.uid);
 
             })
             .catch((error) => {
@@ -51,7 +53,6 @@ export default function Login() {
                 console.log(errorCode);
                 console.log(errorMessage);
             });
-
         if (auth.currentUser != null) {
             navigate('/');
             window.location.reload();

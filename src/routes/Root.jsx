@@ -11,7 +11,7 @@ import {FixedTaskList} from "../components/FixedTaskList.jsx";
 import {UserAppendedTaskList} from "../components/UserAppendedTaskList.jsx";
 
 import {auth, FirestoreDB} from "../firebase-config.js";
-import { getDoc, doc} from "firebase/firestore";
+import {getDoc, doc} from "firebase/firestore";
 import {signOut} from "firebase/auth";
 
 
@@ -56,18 +56,19 @@ export default function Root() {
 
     const [userData, setUserData] = useState({});
 
-    const userInfoDocRef = doc(FirestoreDB, "user", auth.currentUser.uid);
 
     useEffect(() => {
+        const userInfoDocRef = doc(FirestoreDB, "user", auth.currentUser.uid);
+
         async function getUser() {
             const userInfoDocSnap = await getDoc(userInfoDocRef);
             setUserData(
                 userInfoDocSnap.data().userData
             );
         }
-
         void getUser();
     }, []);
+
 
     return (
         <>
@@ -78,10 +79,11 @@ export default function Root() {
                             <BAccountCircle/>
                             <div className='flex flex-col'>
                                 <h1 id='userName' className='text-white'>
-                                    {sessionStorage.getItem('userName') !== "null" ?
-                                        sessionStorage.getItem('userName')
+                                    {auth.currentUser.displayName === null ?
+                                        userData.userName
                                         :
-                                        userData.userName}
+                                        localStorage.getItem('userName')
+                                    }
                                 </h1>
                                 <h3 id='userEmail' className='text-white'>{auth.currentUser.email}</h3>
                             </div>
@@ -120,7 +122,7 @@ export default function Root() {
                     </div>
                 </div>
             </div>
-            <div id='contents' className='w-screen h-screen border-2 border-black'>
+            <div id='tadks' className='w-screen h-screen bg-deep_bg_color'>
                 <Outlet/>
             </div>
         </>

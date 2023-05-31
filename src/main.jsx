@@ -95,10 +95,9 @@ function Main() {
     const LoginRouter = createBrowserRouter([
         {
             path: '/',
-            element: <Loading/>
+            element: <Login/>
         },
         {
-            index: true,
             path: "/logIn",
             element: <Login/>,
         },

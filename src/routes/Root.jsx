@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {
-    Form,
+    Form, Link,
     Outlet,
     useLoaderData,
 } from "react-router-dom";
 import {useNavigate} from "react-router";
 import {createTaskList, getTaskLists} from "../taskListControler.js";
 import {ReactComponent as BAccountCircle} from '../assets/big-account-circle.svg'
+import {ReactComponent as Calender} from '../assets/calendar.svg'
 import {FixedTaskList} from "../components/FixedTaskList.jsx";
 import {UserAppendedTaskList} from "../components/UserAppendedTaskList.jsx";
 
@@ -76,7 +77,7 @@ export default function Root() {
                 <div id='nav-header' className='h-1/4'>
                     <div id="user-info">
                         <div id='userInfoBox' className='flex flex-row' onClick={showflyout}>
-                            <BAccountCircle/>
+                            <BAccountCircle name='icon'/>
                             <div className='flex flex-col'>
                                 <h1 id='userName' className='text-white'>
                                     {auth.currentUser.displayName === null ?
@@ -116,6 +117,12 @@ export default function Root() {
 
                 <div id='nav-bottom-items' className='h-20 border-2 w-full '>
                     <div id="bottom-content">
+                        <Link to={`/calender`}>
+                            <div id='daily-tasks' className='task-list'>
+                                <Calender name='icon'/>
+                                <span>daily tasks</span>
+                            </div>
+                        </Link>
                         <Form method="post">
                             <button type="submit">New</button>
                         </Form>

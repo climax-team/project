@@ -20,12 +20,14 @@ import Root, {
 import Task from "./routes/Task.jsx";
 
 import {action as destroyAction} from "./routes/destroy";
+import {loader as taskLoader} from './routes/Task.jsx';
 
 import Login from "./routes/auth/Login.jsx";
 import SignIn from "./routes/auth/SignIn.jsx";
 
 
 import {auth} from "./firebase-config.js";
+import {Calender} from "./routes/Calender.jsx";
 
 function Main() {
     const [userObj, setUserObj] = useState(null);
@@ -58,9 +60,14 @@ function Main() {
                 {
                     path: "/task/:taskListId",
                     element: <Task/>,
-                    //loader: taskLoader,
+                    loader: taskLoader,
                     //action: taskAction,
                 },
+                {
+                    path: "/calender",
+                    element: <Calender/>,
+                },
+
                 {
                     path: "contacts/:contactId/destroy",
                     action: destroyAction,
@@ -89,7 +96,8 @@ function Main() {
                 },
 
             ]
-        }
+        },
+
     ]);
 
     const LoginRouter = createBrowserRouter([

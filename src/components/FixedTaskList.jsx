@@ -14,35 +14,35 @@ export function FixedTaskList() {
         <>
             <Link to={`task/daily-tasks`}>
                 <div id='daily-tasks' className='task-list'>
-                    <SunStrokeIcon/>
+                    <SunStrokeIcon name='icon'/>
                     <span>daily tasks</span>
                 </div>
             </Link>
 
             <Link to={`task/important`}>
                 <div id='important' className='task-list'>
-                    <Star/>
+                    <Star name='icon'/>
                     <span>important</span>
                 </div>
             </Link>
 
             <Link to={`task/plan`}>
             <div id='plan' className='task-list'>
-                <CalenderFill/>
+                <CalenderFill name='icon'/>
                 <span>plan</span>
             </div>
             </Link>
 
             <Link to={`task/about-me`}>
             <div id='about-me' className='task-list'>
-                <AccountCircle/>
+                <AccountCircle name='icon'/>
                 <span>about me</span>
             </div>
             </Link>
 
             <Link to={`task/tasks`}>
             <div id='tasks' className='task-list'>
-                <Home/>
+                <Home name='icon'/>
                 <span>tasks</span>
             </div>
             </Link>

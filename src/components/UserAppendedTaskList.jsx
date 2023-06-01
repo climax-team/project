@@ -36,7 +36,7 @@ export function UserAppendedTaskList() {
                             <li key={taskList.id}>
                                 <Link to={`task/${taskList.id}`}>
                                     <div className='flex' onContextMenu={showflyout}>
-                                        <MoreOption/>
+                                        <MoreOption name='icon'/>
                                         {taskList.taskListTitle ?
                                             (
                                                 <>

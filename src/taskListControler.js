@@ -5,7 +5,8 @@ import {
     getDocs,
     Timestamp,
     setDoc,
-    deleteDoc
+    deleteDoc,
+    getDoc
 } from "firebase/firestore";
 
 import moment from "moment";
@@ -21,7 +22,8 @@ export async function createTaskList() {
             createdAt: Date.now(),
             createdDate: now.format(),
             taskListTitle: "no name List",
-            task: {
+            tasks: [
+            {
                 taskTitle : 'title not found',
                 assignment : [],
                 RepeatCycle : null,
@@ -32,7 +34,9 @@ export async function createTaskList() {
                 memo : "",
                 pushNotificationDateTime : Timestamp.fromDate(new Date()),
                 taskDeadLine : Timestamp.fromDate(new Date())
-            },
+            }
+
+            ],
         }
     };
 
@@ -44,10 +48,12 @@ export async function createTaskList() {
 
 
 export async function getTaskList(taskListId){
-    const taskList = await doc(FirestoreDB, auth.currentUser.uid, taskListId)
+    const taskListRef = doc(FirestoreDB, auth.currentUser.uid, taskListId);
+    const taskList = await getDoc(taskListRef);
 
-    console.log(taskList);
-    return taskList;
+    console.log(taskList.data().taskList);
+
+    return taskList.data().taskList;
 }
 
 export async function getTaskLists() {
@@ -66,13 +72,10 @@ export async function getTaskLists() {
             );
         });
     });
-
-
     return userTaskLists.sort(sortBy("last", "createdAt"));
 }
 
+
 export async function deleteTaskList(id) {
     await deleteDoc(doc(FirestoreDB, auth.currentUser.uid, id));
-
-
 }

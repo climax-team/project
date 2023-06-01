@@ -6,9 +6,9 @@ import {FirestoreDB} from "../firebase-config.js";
 import {deleteTaskList} from "../taskListControler.js";
 import {redirect, useNavigate} from "react-router";
 
-
 export function UserAppendedTaskList() {
     const {userAddedTaskLists} = useLoaderData();
+    const navigate = useNavigate();
 
 
     const [flyoutPosition, setFlyoutPosition] = useState({x: 0, y: 0});
@@ -22,10 +22,6 @@ export function UserAppendedTaskList() {
     };
 
     const [showFlyout, setShowFlyout] = useState(false);
-
-
-    console.log(userAddedTaskLists);
-
 
     return (
         <>
@@ -82,7 +78,7 @@ export function UserAppendedTaskList() {
                                                                 event.preventDefault();
                                                             } else {
                                                                 void deleteTaskList(taskList.id)
-                                                                redirect('/');
+                                                                navigate('/');
                                                                 setShowFlyout(false);
                                                             }
                                                         }

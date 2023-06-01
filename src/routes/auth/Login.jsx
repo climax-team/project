@@ -53,6 +53,7 @@ export default function Login() {
                 console.log(errorCode);
                 console.log(errorMessage);
             });
+
         if (auth.currentUser != null) {
             navigate('/');
             window.location.reload();

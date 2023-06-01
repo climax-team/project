@@ -1,18 +1,17 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 import {
     Form, Link,
     Outlet,
     useLoaderData,
 } from "react-router-dom";
 import {useNavigate} from "react-router";
-import {createTaskList, getTaskLists} from "../taskListControler.js";
+import {createTaskList, getTaskLists, getUserInfo} from "../taskListControler.js";
 import {ReactComponent as BAccountCircle} from '../assets/big-account-circle.svg'
 import {ReactComponent as Calender} from '../assets/calendar.svg'
 import {FixedTaskList} from "../components/FixedTaskList.jsx";
 import {UserAppendedTaskList} from "../components/UserAppendedTaskList.jsx";
 
-import {auth, FirestoreDB} from "../firebase-config.js";
-import {getDoc, doc} from "firebase/firestore";
+import {auth} from "../firebase-config.js";
 import {signOut} from "firebase/auth";
 
 
@@ -23,15 +22,19 @@ export async function action() {
 
 export async function loader() {
     const userAddedTaskLists = await getTaskLists();
-    return {userAddedTaskLists};
+    const userInfo = await getUserInfo();
+
+    return {userAddedTaskLists, userInfo};
 }
 
 export default function Root() {
     const navigate = useNavigate();
+    const {userInfo} = useLoaderData();
 
     function handleLogOut() {
         signOut(auth).then(() => {
             navigate('/logIn');
+            window.localStorage.clear();
             window.location.reload()
             console.log("log-out successful");
         }).catch((error) => {
@@ -54,23 +57,6 @@ export default function Root() {
         setShowFlyout(false);
     };
 
-
-    const [userData, setUserData] = useState({});
-
-
-    useEffect(() => {
-        const userInfoDocRef = doc(FirestoreDB, "user", auth.currentUser.uid);
-
-        async function getUser() {
-            const userInfoDocSnap = await getDoc(userInfoDocRef);
-            setUserData(
-                userInfoDocSnap.data().userData
-            );
-        }
-        void getUser();
-    }, []);
-
-
     return (
         <>
             <div id='sidebar' className='w-1/5 bg-light_bg_color h-screen border-2 flex flex-col min-w-max'>
@@ -81,7 +67,7 @@ export default function Root() {
                             <div className='flex flex-col'>
                                 <h1 id='userName' className='text-white'>
                                     {auth.currentUser.displayName === null ?
-                                        userData.userName
+                                        userInfo.userName
                                         :
                                         localStorage.getItem('userName')
                                     }

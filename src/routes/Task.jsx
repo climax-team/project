@@ -44,8 +44,8 @@ export default function Task() {
                 <div id='tasks' className='h-5/6 mt-10'>
                     <TaskRender userTasks={taskList} />
                 </div>
-                <div id='task_adder' className='bg-light_bg_color rounded-md h-14 flex items-center'>
-                    <Plus name='icon' width='20' heigth='20' class='mx-3'/>
+                <div id='task_adder' className='bg-light_bg_color rounded-md h-14 flex items-center '>
+                    <Plus name='icon' width='30' heigth='30' className='mx-3'/>
                     <input className='h-12' type='text' />
                     <label>add task</label>
                 </div>

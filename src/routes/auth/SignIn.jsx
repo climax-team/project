@@ -1,11 +1,11 @@
 import {useNavigate} from "react-router";
 import {useState} from "react";
 import {auth, FirestoreDB} from "../../firebase-config.js";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import {doc, setDoc} from "firebase/firestore";
+import {createUserWithEmailAndPassword} from "firebase/auth";
+import {doc, setDoc, addDoc, collection} from "firebase/firestore";
 
 
-export default function SignIn(){
+export default function SignIn() {
     const navigate = useNavigate();
 
     const [userName, setUserName] = useState("");
@@ -16,24 +16,36 @@ export default function SignIn(){
     function handleSubmit(e) {
         e.preventDefault();
 
-        if (password !== repeatPassword){
+        if (password !== repeatPassword) {
             alert("incorrect password");
             return 0;
         }
 
         createUserWithEmailAndPassword(auth, email, password)
             .then(async (userCredential) => {
-                const uid = userCredential.user.uid;
+                const user = userCredential.user;
 
-                const userData = {
-                    userName: userName,
-                    userEmail: email,
-                    password: password,
-                };
+                localStorage.setItem('userName', user.displayName);
+                localStorage.setItem('userEmail', user.email);
+                localStorage.setItem('userUid', user.uid);
 
-                await setDoc(doc(FirestoreDB, 'user', uid), userData);
-                await setDoc(doc(FirestoreDB, 'userTaskLists', uid), {});
-                navigate('/logIn');
+                const userData =
+                    {
+                        userData: {
+                            userName: userName,
+                            userEmail: email,
+                            password: password,
+                        }
+                    };
+
+                await setDoc(doc(FirestoreDB, 'user', user.uid), userData);
+
+                if (auth.currentUser != null) {
+                    navigate('/');
+                    window.location.reload();
+                } else {
+                    navigate('/logIn');
+                }
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -42,10 +54,11 @@ export default function SignIn(){
                 console.log(errorMessage);
             });
 
+
     }
 
 
-    return(
+    return (
         <div className='w-full h-full bg-deep_bg_color flex items-center'>
             <div className='w-full max-h-fit flex flex-col items-center '>
                 <div className='w-1/2'>
@@ -136,7 +149,7 @@ export default function SignIn(){
 
                     <div className='w-full text-lg text-form_gray_color'>
                         <a className='hover:cursor-pointer'
-                            onClick={() => navigate('/logIn')}>do you already have account?</a>
+                           onClick={() => navigate('/logIn')}>do you already have account?</a>
                     </div>
 
                     <div className='w-full'>

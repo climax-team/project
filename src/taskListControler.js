@@ -12,29 +12,36 @@ import {
 import moment from "moment";
 import sortBy from "sort-by";
 
+export async function getUserInfo() {
+    const userInfoDocRef = doc(FirestoreDB, "user", auth.currentUser.uid);
+    const userInfoDocSnap = await getDoc(userInfoDocRef);
+
+    return userInfoDocSnap.data().userData
+}
+
 export async function createTaskList() {
     let id = Math.random().toString(36).substring(2, 9);
     const now = moment();
 
     const addedTaskList = {
-        taskList : {
-            id : id,
+        taskList: {
+            id: id,
             createdAt: Date.now(),
             createdDate: now.format(),
             taskListTitle: "no name List",
             tasks: [
-            {
-                taskTitle : 'title not found',
-                assignment : [],
-                RepeatCycle : null,
-                isImportant : false,
-                isLowRankListExist : false,
-                isRepeat : false,
-                lowRankTasks : [],
-                memo : "",
-                pushNotificationDateTime : Timestamp.fromDate(new Date()),
-                taskDeadLine : Timestamp.fromDate(new Date())
-            }
+                {
+                    taskTitle: 'title not found',
+                    assignment: [],
+                    RepeatCycle: null,
+                    isImportant: false,
+                    isLowRankListExist: false,
+                    isRepeat: false,
+                    lowRankTasks: [],
+                    memo: "",
+                    pushNotificationDateTime: Timestamp.fromDate(new Date()),
+                    taskDeadLine: Timestamp.fromDate(new Date())
+                }
 
             ],
         }
@@ -47,7 +54,7 @@ export async function createTaskList() {
 }
 
 
-export async function getTaskList(taskListId){
+export async function getTaskList(taskListId) {
     const taskListRef = doc(FirestoreDB, auth.currentUser.uid, taskListId);
     const taskList = await getDoc(taskListRef);
 

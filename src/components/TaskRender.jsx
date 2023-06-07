@@ -20,15 +20,14 @@ export function TaskRender(userTasks) {
                     {
                         tasks.map((task) =>
                             <li key={uuidv4()} className='text-white h-14 rounded-md bg-light_bg_color flex justify-between'>
-                                <div id='cheacker-radio' className='flex items-center justify-center p-3'>
+                                <div id='cheacker-radio' className='flex items-center justify-center'>
                                     <div className='
-                                      w-5
-                                      h-5
+                                      w-5 h-5
                                       rounded-full
-                                      mx-auto
-                                      border-2
+                                      ml-4 mr-3
+                                      border-3
                                       border-solid
-                                      border-bg-form_gray_color'
+                                      border-form_gray_color'
                                     >
                                     </div>
                                 </div>

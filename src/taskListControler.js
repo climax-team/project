@@ -12,6 +12,8 @@ import {
 import moment from "moment";
 import sortBy from "sort-by";
 
+
+
 export async function getUserInfo() {
     const userInfoDocRef = doc(FirestoreDB, "user", auth.currentUser.uid);
     const userInfoDocSnap = await getDoc(userInfoDocRef);
@@ -53,6 +55,9 @@ export async function createTaskList() {
     return await getTaskLists();
 }
 
+export async function createTask() {
+
+}
 
 export async function getTaskList(taskListId) {
     const taskListRef = doc(FirestoreDB, auth.currentUser.uid, taskListId);

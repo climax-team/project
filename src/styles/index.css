@@ -4,6 +4,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+    .placeholder-transparent:focus::placeholder {
+        color: transparent;
+    }
+
+    .min-w-200{
+        min-width: 200px;
+    }
+    .border-3 {
+        border-width: 3px;
+    }
+
+}
+
 #root {
     display: flex;
     height: 100%;

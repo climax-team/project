@@ -1,12 +1,12 @@
 import {Form, Link, useLoaderData,} from "react-router-dom";
 import {ReactComponent as MoreOption} from '../assets/more-option.svg'
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {collection, getDocs} from "firebase/firestore";
 import {FirestoreDB} from "../firebase-config.js";
 import {deleteTaskList} from "../taskListControler.js";
 import {redirect, useNavigate} from "react-router";
 
-export function UserAppendedTaskList() {
+export function UserAppendedTaskList({setCurrentItem, currentItem}) {
     const {userAddedTaskLists} = useLoaderData();
     const navigate = useNavigate();
 
@@ -30,19 +30,26 @@ export function UserAppendedTaskList() {
                     <ul>
                         {userAddedTaskLists.map(taskList => (
                             <li key={taskList.id}>
-                                <Link to={`task/${taskList.id}`}>
-                                    <div className='flex' onContextMenu={showflyout}>
-                                        <MoreOption name='icon'/>
-                                        {taskList.taskListTitle ?
-                                            (
-                                                <>
-                                                    {taskList.taskListTitle}
-                                                </>
-                                            ) :
-                                            (
-                                                <i>null</i>
-                                            )
-                                        }
+                                <Link to={`task/${taskList.id}`}
+                                      onClick={() => setCurrentItem(taskList.id)}>
+                                    <div className='
+                                          flex
+                                          hover:bg-light_form_color
+                                          rounded-md
+                                          mx-2 my-1
+                                          px-0.5
+                                          py-2
+                                          items-center
+                                          '
+                                         style={{background: currentItem === taskList.id && '#1e1e2c'}}
+                                         onContextMenu={showflyout}
+                                    >
+                                        <div className='m-2'>
+                                            <MoreOption name='icon'/>
+                                        </div>
+                                        <span className='text-white ml-2 text-lg'>
+                                            {taskList.taskListTitle}
+                                        </span>
 
                                         {showFlyout &&
                                             (<div
@@ -73,16 +80,17 @@ export function UserAppendedTaskList() {
                                                 {/*    }*/}
                                                 {/*>*/}
                                                 {/*</Form>*/}
-                                                    <button onClick={(event) => {
-                                                            if (!confirm("are you sure?")) {
-                                                                event.preventDefault();
-                                                            } else {
-                                                                void deleteTaskList(taskList.id)
-                                                                navigate('/');
-                                                                setShowFlyout(false);
-                                                            }
-                                                        }
-                                                    }>🐍delete🐍</button>
+                                                <button onClick={(event) => {
+                                                    if (!confirm("are you sure?")) {
+                                                        event.preventDefault();
+                                                    } else {
+                                                        void deleteTaskList(taskList.id)
+                                                        redirect('/');
+                                                        setShowFlyout(false);
+                                                    }
+                                                }
+                                                }>🐍delete🐍
+                                                </button>
                                                 <button>| edit |</button>
                                                 <button onClick={() =>
                                                     setShowFlyout(false)

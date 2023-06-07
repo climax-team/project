@@ -13,9 +13,7 @@ export default {
       'form_gray_color': '#848484',
       'white': '#ffffff',
       'black': '#000000',
-      'light_form_color': '#47474F'
-
-
+      'light_form_color': '#47474F',
     },
   },
   plugins: [],

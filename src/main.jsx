@@ -20,7 +20,10 @@ import Root, {
 import Task from "./routes/Task.jsx";
 
 import {action as destroyAction} from "./routes/destroy";
-import {loader as taskLoader} from './routes/Task.jsx';
+import {
+    loader as taskLoader,
+    action as taskAction
+} from './routes/Task.jsx';
 
 import Login from "./routes/auth/Login.jsx";
 import SignIn from "./routes/auth/SignIn.jsx";
@@ -61,13 +64,14 @@ function Main() {
                     path: "/task/:taskListId",
                     element: <Task/>,
                     loader: taskLoader,
-                    //action: taskAction,
+                    action: taskAction,
                 },
                 {
                     path: "/calender",
                     element: <Calender/>,
                 },
 
+                //todo fix destroy
                 {
                     path: "contacts/:contactId/destroy",
                     action: destroyAction,
@@ -75,7 +79,7 @@ function Main() {
                 },
 
                 {
-                    path: "/task/daily-tasks",
+                    path: "/task/dailyTasks",
                     element: <DailyTasks/>
                 },
                 {
@@ -87,7 +91,7 @@ function Main() {
                     element: <Plan/>
                 },
                 {
-                    path: "/task/about-me",
+                    path: "/task/aboutMe",
                     element: <AboutMe/>
                 },
                 {

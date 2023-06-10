@@ -4,7 +4,7 @@ import {ReactComponent as MoreVert} from '../assets/more_vert.svg'
 import {ReactComponent as PeopleOutline} from '../assets/people_outline.svg'
 import {ReactComponent as Plus} from '../assets/plus.svg'
 import {TaskRender} from "../components/TaskRender.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export async function action({params}) {
     const taskList = await getTaskList(params.taskListId);
@@ -14,13 +14,8 @@ export async function action({params}) {
 
 export async function loader({params}) {
     const taskListId = params.taskListId;
-    const taskList = await getTaskList(taskListId);
-    if (!taskList) {
-        throw new Response("", {
-            status: 404,
-            statusText: "Not Found",
-        });
-    }
+    const taskList = await getTaskList(params.taskListId);
+
     return {taskList, taskListId};
 }
 
@@ -29,6 +24,11 @@ export default function Task() {
     const [isTaskAddInputFocus, setIsTaskAddInputFocus] = useState(false);
     const [inputValue, setInputValue] = useState("");
 
+    const [tasks, setTasks] = useState(taskList);
+
+    useEffect(() => {
+        setTasks(taskList);
+    }, [taskList]);
 
     const handleInputFocusChange = () => {
         isTaskAddInputFocus ?
@@ -47,6 +47,9 @@ export default function Task() {
         }
 
         await createTask(taskObj, taskListId);
+
+        setTasks(await getTaskList(taskListId));
+        console.log('add',tasks);
         setInputValue("");
     }
 
@@ -55,7 +58,7 @@ export default function Task() {
             <div id='top_content-area' className='flex w-full mt-8'>
                 <div id='task_list-title' className='w-full'>
                     <h1 className='text-white text-5xl'>
-                        {taskList.taskListTitle}
+                        {tasks.taskListTitle}
                     </h1>
                 </div>
                 <div id='task_list-button' className='flex w-full justify-end items-center'>
@@ -72,7 +75,7 @@ export default function Task() {
 
             <div id='bottum_content-area' className='h-full'>
                 <div id='tasks' className='h-5/6 mt-10'>
-                    <TaskRender userTasks={taskList}/>
+                    <TaskRender userTasks={tasks}/>
                 </div>
 
                 <div id='task_adder'

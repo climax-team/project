@@ -1,25 +1,16 @@
-import {useId, useState} from "react";
 import {ReactComponent as EmptyStar} from "../assets/star-empty.svg"
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 export function TaskRender(userTasks) {
-
-    const taskObj = userTasks.userTasks.tasks;
-    const [tasks, setTasks] = useState(taskObj);
-
-
-
-    console.log('test');
-    console.log(userTasks);
-    console.log(tasks);
+        const taskObj = userTasks.userTasks.tasks;
 
     return (
         <>
-            {!tasks.isEmpty ? (
+            {!taskObj.isEmpty ? (
                 <ul className=''>
                     {
-                        tasks.map((task) =>
-                            <li key={uuidv4()} className='text-white h-14 rounded-md bg-light_bg_color flex justify-between my-2'>
+                        taskObj.map((task) =>
+                            <li key={uuid()} className='text-white h-14 rounded-md bg-light_bg_color flex justify-between my-2'>
                                 <div id='cheacker-radio' className='flex items-center justify-center'>
                                     <div className='
                                       w-5 h-5

@@ -86,7 +86,7 @@ export default function Root() {
                     </Form>
                 </div>
             </div>
-            <div id='tadks' className='w-screen h-screen bg-deep_bg_color'>
+            <div className='w-screen h-screen bg-deep_bg_color'>
                 <Outlet/>
             </div>
         </>

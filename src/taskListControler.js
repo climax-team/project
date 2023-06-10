@@ -78,11 +78,12 @@ export async function createTask( taskObj,taskListId ) {
 }
 
 export async function getTaskList(taskListId) {
-    const taskListRef = doc(FirestoreDB, auth.currentUser.uid, taskListId);
-    const taskList = await getDoc(taskListRef);
+    const taskListRef =
+        doc(FirestoreDB, auth.currentUser.uid, taskListId);
+    const taskList =
+        await getDoc(taskListRef);
 
     console.log(taskList.data().taskList);
-
     return taskList.data().taskList;
 }
 

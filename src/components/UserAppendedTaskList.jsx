@@ -1,14 +1,11 @@
-import {Form, Link, useLoaderData,} from "react-router-dom";
+import {Link, NavLink, useLoaderData,} from "react-router-dom";
 import {ReactComponent as MoreOption} from '../assets/more-option.svg'
-import React, {useEffect, useState} from "react";
-import {collection, getDocs} from "firebase/firestore";
-import {FirestoreDB} from "../firebase-config.js";
+import React, {useState} from "react";
 import {deleteTaskList} from "../taskListControler.js";
-import {redirect, useNavigate} from "react-router";
+import {redirect} from "react-router";
 
 export function UserAppendedTaskList({setCurrentItem, currentItem}) {
     const {userAddedTaskLists} = useLoaderData();
-    const navigate = useNavigate();
 
 
     const [flyoutPosition, setFlyoutPosition] = useState({x: 0, y: 0});
@@ -30,9 +27,9 @@ export function UserAppendedTaskList({setCurrentItem, currentItem}) {
                     <ul>
                         {userAddedTaskLists.map(taskList => (
                             <li key={taskList.id}>
-                                <Link to={`task/${taskList.id}`}
-                                      onClick={() => setCurrentItem(taskList.id)}>
-                                    <div className='
+                                    <Link to={`task/${taskList.id}`}
+                                          onClick={() => setCurrentItem(taskList.id)}>
+                                        <div className='
                                           flex
                                           hover:bg-light_form_color
                                           rounded-md
@@ -41,65 +38,65 @@ export function UserAppendedTaskList({setCurrentItem, currentItem}) {
                                           py-2
                                           items-center
                                           '
-                                         style={{background: currentItem === taskList.id && '#1e1e2c'}}
-                                         onContextMenu={showflyout}
-                                    >
-                                        <div className='m-2'>
-                                            <MoreOption name='icon'/>
-                                        </div>
-                                        <span className='text-white ml-2 text-lg'>
+                                             style={{background: currentItem === taskList.id && '#1e1e2c'}}
+                                             onContextMenu={showflyout}
+                                        >
+                                            <div className='m-2'>
+                                                <MoreOption name='icon'/>
+                                            </div>
+                                            <span className='text-white ml-2 text-lg'>
                                             {taskList.taskListTitle}
                                         </span>
 
-                                        {showFlyout &&
-                                            (<div
-                                                style={{
-                                                    top: flyoutPosition.y,
-                                                    left: flyoutPosition.x,
-                                                }}
-                                                className='
+                                            {showFlyout &&
+                                                (<div
+                                                    style={{
+                                                        top: flyoutPosition.y,
+                                                        left: flyoutPosition.x,
+                                                    }}
+                                                    className='
                                                     absolute
                                                     bg-form_gray_color
                                                     border-solid
                                                     border
                                                     border-black
                                                     p-2.5'
-                                            >
-                                                {/*<Form*/}
-                                                {/*    method="post"*/}
-                                                {/*    action="destroy"*/}
-                                                {/*    onSubmit={(event) => {*/}
-                                                {/*        if (!confirm("are you sure?")) {*/}
-                                                {/*            event.preventDefault();*/}
-                                                {/*        } else {*/}
-                                                {/*            void deleteTaskList(taskList.id)*/}
-                                                {/*            redirect('/');*/}
-                                                {/*        }*/}
+                                                >
+                                                    {/*<Form*/}
+                                                    {/*    method="post"*/}
+                                                    {/*    action="destroy"*/}
+                                                    {/*    onSubmit={(event) => {*/}
+                                                    {/*        if (!confirm("are you sure?")) {*/}
+                                                    {/*            event.preventDefault();*/}
+                                                    {/*        } else {*/}
+                                                    {/*            void deleteTaskList(taskList.id)*/}
+                                                    {/*            redirect('/');*/}
+                                                    {/*        }*/}
 
-                                                {/*    }*/}
-                                                {/*    }*/}
-                                                {/*>*/}
-                                                {/*</Form>*/}
-                                                <button onClick={(event) => {
-                                                    if (!confirm("are you sure?")) {
-                                                        event.preventDefault();
-                                                    } else {
-                                                        void deleteTaskList(taskList.id)
-                                                        redirect('/');
-                                                        setShowFlyout(false);
+                                                    {/*    }*/}
+                                                    {/*    }*/}
+                                                    {/*>*/}
+                                                    {/*</Form>*/}
+                                                    <button onClick={(event) => {
+                                                        if (!confirm("are you sure?")) {
+                                                            event.preventDefault();
+                                                        } else {
+                                                            void deleteTaskList(taskList.id)
+                                                            redirect('/');
+                                                            setShowFlyout(false);
+                                                        }
                                                     }
-                                                }
-                                                }>🐍delete🐍
-                                                </button>
-                                                <button>| edit |</button>
-                                                <button onClick={() =>
-                                                    setShowFlyout(false)
-                                                }>* x *
-                                                </button>
-                                            </div>)
-                                        }
-                                    </div>
-                                </Link>
+                                                    }>🐍delete🐍
+                                                    </button>
+                                                    <button>| edit |</button>
+                                                    <button onClick={() =>
+                                                        setShowFlyout(false)
+                                                    }>* x *
+                                                    </button>
+                                                </div>)
+                                            }
+                                        </div>
+                                    </Link>
                             </li>
                         ))}
                     </ul>

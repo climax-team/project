@@ -1,40 +1,53 @@
 import {Form, useLoaderData} from "react-router-dom";
-import {getTaskList} from "../taskListControler.js";
+import {createTask, getTaskList} from "../taskListControler.js";
 import {ReactComponent as MoreVert} from '../assets/more_vert.svg'
 import {ReactComponent as PeopleOutline} from '../assets/people_outline.svg'
 import {ReactComponent as Plus} from '../assets/plus.svg'
 import {TaskRender} from "../components/TaskRender.jsx";
 import {useState} from "react";
-import {redirect} from "react-router";
 
-export async function action(e) {
-    console.log("e",e);
-    console.log("on submitted");
+export async function action({params}) {
+    const taskList = await getTaskList(params.taskListId);
 
-
-    return redirect(`/task/${e.params.taskListId}`);
+    return { taskList }
 }
 
 export async function loader({params}) {
-    const taskList = await getTaskList(params.taskListId);
+    const taskListId = params.taskListId;
+    const taskList = await getTaskList(taskListId);
     if (!taskList) {
         throw new Response("", {
             status: 404,
             statusText: "Not Found",
         });
     }
-    return {taskList};
+    return {taskList, taskListId};
 }
 
 export default function Task() {
-    const {taskList} = useLoaderData();
+    const {taskList, taskListId} = useLoaderData();
     const [isTaskAddInputFocus, setIsTaskAddInputFocus] = useState(false);
+    const [inputValue, setInputValue] = useState("");
+
 
     const handleInputFocusChange = () => {
         isTaskAddInputFocus ?
             setIsTaskAddInputFocus(false)
             :
             setIsTaskAddInputFocus(true);
+    }
+
+    const handleInputChange = (event) => {
+        setInputValue(event.target.value);
+    }
+
+    const handleSubmit = async () => {
+        const taskObj = {
+            'taskTitle' : inputValue,
+        }
+
+        await createTask(taskObj, taskListId);
+        setInputValue("");
     }
 
     return (
@@ -86,16 +99,18 @@ export default function Task() {
                             :
                             <Plus name='icon' width='30' heigth='30' className='mx-3'/>
                     }
-                    <Form method='post' >
+                    <Form onSubmit={handleSubmit} className='w-full'>
                         <input type='text'
                                className='
-                                h-12 w-2/3
+                                h-12 w-full
                                 bg-light_bg_color
                                 placeholder-transparent
                                 text-white
                                 border-0
                                 outline-none
                                 '
+                               value={inputValue}
+                               onChange={handleInputChange}
                                onFocus={handleInputFocusChange}
                                onBlur={handleInputFocusChange}
                                placeholder='add task'/>

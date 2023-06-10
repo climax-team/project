@@ -6,7 +6,8 @@ import {
     Timestamp,
     setDoc,
     deleteDoc,
-    getDoc
+    getDoc,
+    updateDoc
 } from "firebase/firestore";
 
 import moment from "moment";
@@ -55,8 +56,25 @@ export async function createTaskList() {
     return await getTaskLists();
 }
 
-export async function createTask() {
+export async function createTask( taskObj,taskListId ) {
+    const taskListRef = doc(FirestoreDB, auth.currentUser.uid, taskListId);
 
+    const currentObj = await getDoc(taskListRef);
+
+    let currentArray = currentObj.data().taskList.tasks;
+
+    console.log("currentArray",currentArray);
+
+    currentArray.unshift(taskObj);
+
+    console.log(currentArray);
+    const data = {
+        'taskList.tasks' : currentArray,
+
+    }
+
+    await updateDoc(taskListRef, data);
+    console.log('task uploaded');
 }
 
 export async function getTaskList(taskListId) {

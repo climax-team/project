@@ -28,9 +28,9 @@ export async function loader() {
 }
 
 export default function Root() {
-    const [currentSelectedItem, setCurrentSelectedItem] = useState(sessionStorage.getItem('currentSelectedItem'));
+    const [currentSelectedTaskList, setCurrentSelectedTaskList] = useState(sessionStorage.getItem('currentSelectedTaskList'));
 
-    sessionStorage.setItem('currentSelectedItem', currentSelectedItem);
+    sessionStorage.setItem('currentSelectedTaskList', currentSelectedTaskList);
 
     return (
         <>
@@ -46,17 +46,17 @@ export default function Root() {
 
                 <div id='nav-items' className='h-1/3 flex-grow min-w-max divide-y'>
                     <div id="fixed-taskList" >
-                        <FixedTaskList setCurrentItem={setCurrentSelectedItem} currentItem={currentSelectedItem}/>
+                        <FixedTaskList setCurrentItem={setCurrentSelectedTaskList} currentItem={currentSelectedTaskList}/>
                     </div>
                     <div id="added-taskList" className='border-form_gray_color'>
-                        <UserAppendedTaskList setCurrentItem={setCurrentSelectedItem}
-                                              currentItem={currentSelectedItem}/>
+                        <UserAppendedTaskList setCurrentItem={setCurrentSelectedTaskList}
+                                              currentItem={currentSelectedTaskList}/>
                     </div>
                 </div>
 
                 <div id='nav-bottom-items' className='w-full '>
                     <Link to={`/calender`}
-                          onClick={() => setCurrentSelectedItem("calender")}
+                          onClick={() => setCurrentSelectedTaskList("calender")}
                     >
                         <div id='daily-tasks'
                              className='
@@ -68,7 +68,7 @@ export default function Root() {
                                   py-2
                                   items-center
                                   '
-                             style={{background: currentSelectedItem === 'calender' && '#1e1e2c'}}
+                             style={{background: currentSelectedTaskList === 'calender' && '#1e1e2c'}}
                         >
                             <div className='m-2'>
                             <Calender name='icon'/>

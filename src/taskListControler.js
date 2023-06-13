@@ -7,13 +7,12 @@ import {
     setDoc,
     deleteDoc,
     getDoc,
-    updateDoc
+    updateDoc, query, where
 } from "firebase/firestore";
 
 import moment from "moment";
 import sortBy from "sort-by";
-
-
+import {v4 as uuid} from 'uuid';
 
 export async function getUserInfo() {
     const userInfoDocRef = doc(FirestoreDB, "user", auth.currentUser.uid);
@@ -34,6 +33,7 @@ export async function createTaskList() {
             taskListTitle: "no name List",
             tasks: [
                 {
+                    taskId: uuid(),
                     taskTitle: 'title not found',
                     assignment: [],
                     RepeatCycle: null,
@@ -43,7 +43,8 @@ export async function createTaskList() {
                     lowRankTasks: [],
                     memo: "",
                     pushNotificationDateTime: Timestamp.fromDate(new Date()),
-                    taskDeadLine: Timestamp.fromDate(new Date())
+                    taskDeadLine: Timestamp.fromDate(new Date()),
+                    createdAt : Timestamp.fromDate(new Date()),
                 }
 
             ],
@@ -56,25 +57,18 @@ export async function createTaskList() {
     return await getTaskLists();
 }
 
-export async function createTask( taskObj,taskListId ) {
+export async function createTask(taskObj, taskListId) {
     const taskListRef = doc(FirestoreDB, auth.currentUser.uid, taskListId);
-
     const currentObj = await getDoc(taskListRef);
-
     let currentArray = currentObj.data().taskList.tasks;
-
-    console.log("currentArray",currentArray);
 
     currentArray.unshift(taskObj);
 
-    console.log(currentArray);
     const data = {
-        'taskList.tasks' : currentArray,
-
+        'taskList.tasks': currentArray,
     }
 
     await updateDoc(taskListRef, data);
-    console.log('task uploaded');
 }
 
 export async function getTaskList(taskListId) {
@@ -83,12 +77,10 @@ export async function getTaskList(taskListId) {
     const taskList =
         await getDoc(taskListRef);
 
-    console.log(taskList.data().taskList);
     return taskList.data().taskList;
 }
 
 export async function getTaskLists() {
-
     let userTaskLists = [];
 
     await getDocs(collection(FirestoreDB, auth.currentUser.uid)).then((appData) => {
@@ -106,6 +98,23 @@ export async function getTaskLists() {
     return userTaskLists.sort(sortBy("last", "createdAt"));
 }
 
+export async function getTask(taskId) {
+    const userRef = doc(FirestoreDB, auth.currentUser.uid, sessionStorage.getItem('currentSelectedTaskList'));
+
+    const docSnap = await getDoc(userRef);
+
+    if (docSnap.exists()) {
+        const array = docSnap.data().taskList.tasks;
+
+        const index = array.findIndex(e => e.taskId === taskId);
+        if (index !== -1) {
+            console.log(array[index]);
+        }
+        return array[index];
+    } else {
+        return console.error("No such document!");
+    }
+}
 
 export async function deleteTaskList(id) {
     await deleteDoc(doc(FirestoreDB, auth.currentUser.uid, id));

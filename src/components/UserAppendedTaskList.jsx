@@ -8,6 +8,8 @@ export function UserAppendedTaskList({setCurrentItem, currentItem}) {
     const {userAddedTaskLists} = useLoaderData();
 
 
+
+
     const [flyoutPosition, setFlyoutPosition] = useState({x: 0, y: 0});
     const showflyout = (event) => {
         event.preventDefault();
@@ -81,7 +83,7 @@ export function UserAppendedTaskList({setCurrentItem, currentItem}) {
                                                         if (!confirm("are you sure?")) {
                                                             event.preventDefault();
                                                         } else {
-                                                            void deleteTaskList(taskList.id)
+                                                            void deleteTaskList(taskList.id);
                                                             redirect('/');
                                                             setShowFlyout(false);
                                                         }

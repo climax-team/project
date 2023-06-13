@@ -12,9 +12,15 @@
     .min-w-200{
         min-width: 200px;
     }
+
+    .min-w-360{
+    min-width: 360px;
+    }
+
     .border-3 {
         border-width: 3px;
     }
+
 
 }
 

@@ -36,7 +36,7 @@ function Main() {
     const [userObj, setUserObj] = useState(null);
 
 
-    useEffect(() => {
+    useEffect( () => {
         auth.onAuthStateChanged((user) => {
             if (user) {
                 setUserObj({

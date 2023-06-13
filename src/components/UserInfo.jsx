@@ -14,10 +14,11 @@ export function UserInfo() {
 		signOut(auth).then(() => {
 			navigate('/logIn');
 			window.localStorage.clear();
+			window.sessionStorage.clear();
 			window.location.reload()
 			console.log("log-out successful");
 		}).catch((error) => {
-			console.error("log out something happen");
+			console.error("log out something happen",error);
 		})
 	}
 

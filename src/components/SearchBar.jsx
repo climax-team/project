@@ -4,7 +4,7 @@ import {ReactComponent as Search} from "../assets/search.svg";
 export function SearchBar() {
 	return (
 		<div className='flex justify-end mx-4 items-center w-full'>
-			<input type='text'
+			<input type='search'
 				   placeholder='Search'
 				   className='bg-deep_bg_color
 						rounded

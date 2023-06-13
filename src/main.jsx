@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react'
-import ReactDOM from 'react-dom/client'
+import React, {useEffect, useState} from 'react';
+import ReactDOM from 'react-dom/client';
+import {auth} from "./firebase-config.js";
 import {
     createBrowserRouter,
     RouterProvider,
@@ -11,13 +12,15 @@ import {Important} from "./routes/FixedTaskLists/Important.jsx";
 import {Plan} from "./routes/FixedTaskLists/Plan.jsx";
 import {AboutMe} from "./routes/FixedTaskLists/AboutMe.jsx";
 import {TasksNavItem} from "./routes/FixedTaskLists/Tasks-nav-item.jsx";
+import Task from "./routes/Task.jsx";
+import Login from "./routes/auth/Login.jsx";
+import SignIn from "./routes/auth/SignIn.jsx";
 
-
+import {Calender} from "./routes/Calender.jsx";
 import Root, {
     action as rootAction,
     loader as rootLoader,
 } from "./routes/Root.jsx";
-import Task from "./routes/Task.jsx";
 
 import {action as destroyAction} from "./routes/destroy";
 import {
@@ -25,16 +28,9 @@ import {
     action as taskAction
 } from './routes/Task.jsx';
 
-import Login from "./routes/auth/Login.jsx";
-import SignIn from "./routes/auth/SignIn.jsx";
-
-
-import {auth} from "./firebase-config.js";
-import {Calender} from "./routes/Calender.jsx";
 
 function Main() {
     const [userObj, setUserObj] = useState(null);
-
 
     useEffect( () => {
         auth.onAuthStateChanged((user) => {
@@ -43,7 +39,9 @@ function Main() {
                     displayName: user.displayName,
                     uid: user.uid,
                     updateProfile: (args) => user.updateProfile(args),
-                });
+                }
+                );
+                
             } else {
                 setUserObj(null);
             }
@@ -134,7 +132,13 @@ function Main() {
 
 //todo styling loading page
 function Loading() {
-    return <h1> loading .....</h1>;
+    return (
+        <div className='w-full h-full bg-deep_bg_color flex justify-center items-center'>
+            <h1 className='text-xl text-white'>
+                loading......
+            </h1>
+        </div>
+    );
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(

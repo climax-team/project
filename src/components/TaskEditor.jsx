@@ -26,7 +26,6 @@ export function TaskEditor({setIsEditorDisplayed, setCurrentSelectedTask, curren
         void getTaskInfo();
     }, [currentSelectedTask]);
 
-    console.log("asdfasddf",currentTaskInfo);
 
 
     return (
@@ -51,7 +50,7 @@ export function TaskEditor({setIsEditorDisplayed, setCurrentSelectedTask, curren
                     </div>
                 </div>
 
-                <div id='add_to_dail-btn' className='bg-deep_bg_color flex items-center my-2 rounded-md'>
+                <div id='add_to_detail-btn' className='bg-deep_bg_color flex items-center my-2 rounded-md' >
                     <div className='m-3.5 flex items-center justify-center'>
                         <SunStroke/>
                     </div>
@@ -72,15 +71,31 @@ export function TaskEditor({setIsEditorDisplayed, setCurrentSelectedTask, curren
                         </div>
                         <span className='text-white'>repeat</span>
                     </div>
+                </div>
 
+                <div id='memo' className='bg-deep_bg_color rounded-md py-2 my-2'>
+                    <textarea name="task-memo"
+                              rows="3"
+                              placeholder='add memo'
+                              className='
+                                    w-full
+                                    px-4 py-3
+                                    bg-deep_bg_color
+                                    focus:outline-none
+                                    text-white
+                              '
+                    >
+
+                    </textarea>
                 </div>
             </div>
+
             <div id='bottom' className='flex items-center text-white p-2 border-t-2'>
                 <div className='w-full flex justify-center items-center'>
                     <span className='text-white text-lg'>added by user_1234 </span>
                 </div>
                 <div className='mx-2'>
-                    <TrashCan/>
+                    <TrashCan />
                 </div>
             </div>
         </div>

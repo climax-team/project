@@ -1,5 +1,4 @@
 import {ReactComponent as EmptyStar} from "../assets/star-empty.svg"
-import {useState} from "react";
 
 
 export function TaskRender({userTasks, setIsEditorDisplayed, currentSelectedTask ,setCurrentSelectedTask}) {

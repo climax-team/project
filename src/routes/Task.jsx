@@ -1,15 +1,17 @@
 import {Form, useLoaderData} from "react-router-dom";
 import {createTask, getTaskList} from "../taskListControler.js";
-import {ReactComponent as MoreVert} from '../assets/more_vert.svg'
-import {ReactComponent as PeopleOutline} from '../assets/people_outline.svg'
-import {ReactComponent as Plus} from '../assets/plus.svg'
+
 import {TaskRender} from "../components/TaskRender.jsx";
 import React, {useEffect, useState} from "react";
 import {TaskEditor} from "../components/TaskEditor.jsx";
-import {v4 as uuid} from 'uuid';
 import {ChackCircle} from "../components/ChackCircle.jsx";
+
+import {v4 as uuid} from 'uuid';
 import {Timestamp} from "firebase/firestore";
 
+import {ReactComponent as MoreVert} from '../assets/more_vert.svg'
+import {ReactComponent as PeopleOutline} from '../assets/people_outline.svg'
+import {ReactComponent as Plus} from '../assets/plus.svg'
 
 export async function action({params}) {
     const taskList = await getTaskList(params.taskListId);

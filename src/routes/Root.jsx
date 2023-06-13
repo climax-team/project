@@ -1,19 +1,19 @@
 import React, {useState} from "react";
 import {
-    Form, Link,
-    Outlet,
-    useLoaderData,
+    Form,
+    Link,
+    Outlet
 } from "react-router-dom";
-import {useNavigate} from "react-router";
 import {createTaskList, getTaskLists, getUserInfo} from "../taskListControler.js";
-import {ReactComponent as Calender} from '../assets/calendar.svg'
-import {ReactComponent as Plus} from '../assets/plus.svg'
+
 import {FixedTaskList} from "../components/FixedTaskList.jsx";
 import {UserAppendedTaskList} from "../components/UserAppendedTaskList.jsx";
 
 import {UserInfo} from "../components/UserInfo.jsx";
 import {SearchBar} from "../components/SearchBar.jsx";
 
+import {ReactComponent as Calender} from '../assets/calendar.svg'
+import {ReactComponent as Plus} from '../assets/plus.svg'
 
 export async function action() {
     const taskList = await createTaskList();

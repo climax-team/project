@@ -7,7 +7,7 @@ import {
     setDoc,
     deleteDoc,
     getDoc,
-    updateDoc, query, where
+    updateDoc,
 } from "firebase/firestore";
 
 import moment from "moment";
@@ -115,6 +115,8 @@ export async function getTask(taskId) {
         return console.error("No such document!");
     }
 }
+
+
 
 export async function deleteTaskList(id) {
     await deleteDoc(doc(FirestoreDB, auth.currentUser.uid, id));

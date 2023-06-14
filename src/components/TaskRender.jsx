@@ -1,7 +1,7 @@
 import {ReactComponent as EmptyStar} from "../assets/star-empty.svg"
 
 
-export function TaskRender({userTasks, setIsEditorDisplayed, currentSelectedTask ,setCurrentSelectedTask}) {
+export function TaskRender({userTasks, setIsEditorDisplayed, currentSelectedTask, setCurrentSelectedTask}) {
     const taskObj = userTasks.tasks;
 
     const handleTaskClick = (taskId) => {
@@ -10,7 +10,7 @@ export function TaskRender({userTasks, setIsEditorDisplayed, currentSelectedTask
     }
     return (
         <>
-            {!taskObj.isEmpty ? (
+            {taskObj.length ? (
                 <ul className=''>
                     {
                         taskObj.map((task) =>
@@ -53,7 +53,9 @@ export function TaskRender({userTasks, setIsEditorDisplayed, currentSelectedTask
                     }
                 </ul>
             ) : (
-                <h1>the list is empty plz add your own task</h1>
+                <div className='flex justify-center items-center h-full'>
+                    <h1 className='text-white text-2xl'>the task list is empty plz add your own task!!</h1>
+                </div>
             )}
         </>
     )

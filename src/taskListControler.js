@@ -32,20 +32,6 @@ export async function createTaskList() {
             createdDate: now.format(),
             taskListTitle: "no name List",
             tasks: [
-                {
-                    taskId: uuid(),
-                    taskTitle: 'title not found',
-                    assignment: [],
-                    RepeatCycle: null,
-                    isImportant: false,
-                    isLowRankListExist: false,
-                    isRepeat: false,
-                    lowRankTasks: [],
-                    memo: "",
-                    pushNotificationDateTime: Timestamp.fromDate(new Date()),
-                    taskDeadLine: Timestamp.fromDate(new Date()),
-                    createdAt : Timestamp.fromDate(new Date()),
-                }
 
             ],
         }
@@ -105,11 +91,7 @@ export async function getTask(taskId) {
 
     if (docSnap.exists()) {
         const array = docSnap.data().taskList.tasks;
-
         const index = array.findIndex(e => e.taskId === taskId);
-        if (index !== -1) {
-            console.log(array[index]);
-        }
         return array[index];
     } else {
         return console.error("No such document!");

@@ -51,7 +51,7 @@ export default function Task() {
 
     const handleSubmit = async () => {
         const taskObj = {
-            taskId : uuid(),
+            taskId: uuid(),
             taskTitle: inputValue,
             assignment: [],
             RepeatCycle: null,
@@ -62,7 +62,7 @@ export default function Task() {
             memo: "",
             pushNotificationDateTime: Timestamp.fromDate(new Date()),
             taskDeadLine: Timestamp.fromDate(new Date()),
-            createdAt : Timestamp.fromDate(new Date()),
+            createdAt: Timestamp.fromDate(new Date()),
         }
         await createTask(taskObj, taskListId);
 
@@ -79,10 +79,10 @@ export default function Task() {
                             {tasks.taskListTitle}
                         </h1>
                     </div>
-                    <TaskListPageBtn />
+                    <TaskListPageBtn/>
                 </div>
-                <div id='bottum_content-area' className='h-full'>
-                    <div id='tasks' className='h-5/6 mt-10'>
+                <div id='bottum_content-area' className='h-full overflow-auto'>
+                    <div id='tasks' className='h-5/6 mt-10 overflow-auto pb-1 rounded-md'>
                         <TaskRender
                             userTasks={tasks}
                             setIsEditorDisplayed={setIsEditorDisplayed}
@@ -101,12 +101,16 @@ export default function Task() {
                         {
                             isTaskAddInputFocus ?
                                 <div className='mr-3 ml-5'>
-                                <ChackCircle size='24px' borderWidth='2.5px' />
+                                    <ChackCircle size='24px' borderWidth='2.5px'/>
                                 </div>
                                 :
                                 <Plus name='icon' width='30' heigth='30' className='mx-3'/>
                         }
-                        <Form onSubmit={handleSubmit} className='w-full'>
+                        <Form
+                            onSubmit={(e) => {
+                            inputValue === "" ? e.preventDefault() : void handleSubmit();
+                            }}
+                            className='w-full'>
                             <input type='text'
                                    className='
                                         h-12 w-full
@@ -115,6 +119,7 @@ export default function Task() {
                                         text-white
                                         border-0
                                         outline-none
+
                                         '
                                    value={inputValue}
                                    onChange={(e) => setInputValue(e.target.value)}

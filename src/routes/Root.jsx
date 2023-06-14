@@ -44,11 +44,11 @@ export default function Root() {
                     </div>
                 </div>
 
-                <div id='nav-items' className='h-1/3 flex-grow min-w-max divide-y'>
+                <div id='nav-items' className='h-1/3 flex-grow min-w-max divide-y overflow-auto rounded-md'>
                     <div id="fixed-taskList" >
                         <FixedTaskList setCurrentItem={setCurrentSelectedTaskList} currentItem={currentSelectedTaskList}/>
                     </div>
-                    <div id="added-taskList" className='border-form_gray_color'>
+                    <div id="added-taskList" className='border-form_gray_color '>
                         <UserAppendedTaskList setCurrentItem={setCurrentSelectedTaskList}
                                               currentItem={currentSelectedTaskList}/>
                     </div>

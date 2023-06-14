@@ -8,7 +8,7 @@ export function SearchBar() {
 				   placeholder='Search'
 				   className='bg-deep_bg_color
 						rounded
-						h-9 w-full
+						h-10 w-full
 						px-4 py-2
 						text-white
 						placeholder:text-form_gray_color

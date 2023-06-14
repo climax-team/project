@@ -95,7 +95,7 @@ export function TaskEditor({setIsEditorDisplayed, setCurrentSelectedTask, curren
                     <span className='text-white text-lg'>added by user_1234 </span>
                 </div>
                 <div className='mx-2'>
-                    <TrashCan />
+                    <TrashCan fill='#ffffff'/>
                 </div>
             </div>
         </div>

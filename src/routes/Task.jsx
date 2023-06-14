@@ -9,9 +9,8 @@ import {ChackCircle} from "../components/ChackCircle.jsx";
 import {v4 as uuid} from 'uuid';
 import {Timestamp} from "firebase/firestore";
 
-import {ReactComponent as MoreVert} from '../assets/more_vert.svg'
-import {ReactComponent as PeopleOutline} from '../assets/people_outline.svg'
 import {ReactComponent as Plus} from '../assets/plus.svg'
+import {TaskListPageBtn} from "../components/TaskListPageBtn.jsx";
 
 export async function action({params}) {
     const taskList = await getTaskList(params.taskListId);
@@ -80,16 +79,7 @@ export default function Task() {
                             {tasks.taskListTitle}
                         </h1>
                     </div>
-                    <div id='task_list-button' className='flex w-full justify-end items-center'>
-                        <div id='share-btn'
-                             className='w-9 h-9 bg-light_bg_color flex justify-center items-center rounded-lg m-1'>
-                            <PeopleOutline name='icon'/>
-                        </div>
-                        <div id='more_option-btn'
-                             className='w-9 h-9 bg-light_bg_color flex justify-center items-center rounded-lg m-1'>
-                            <MoreVert name='icon'/>
-                        </div>
-                    </div>
+                    <TaskListPageBtn />
                 </div>
                 <div id='bottum_content-area' className='h-full'>
                     <div id='tasks' className='h-5/6 mt-10'>

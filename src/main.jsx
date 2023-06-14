@@ -27,37 +27,28 @@ import {
     loader as taskLoader,
     action as taskAction
 } from './routes/Task.jsx';
+import {Index} from "./routes/Index.jsx";
+
 
 
 function Main() {
     const [userObj, setUserObj] = useState(null);
 
     useEffect( () => {
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                setUserObj({
-                    displayName: user.displayName,
-                    uid: user.uid,
-                    updateProfile: (args) => user.updateProfile(args),
-                }
-                );
-                
-            } else {
-                setUserObj(null);
-            }
-        });
+    auth.onAuthStateChanged(() => setUserObj({}));
     }, []);
-
 
     const router = createBrowserRouter([
         {
             path: "/",
-            element: <Root
-                userObj = {userObj}
-            />,
+            element: <Root/>,
             action: rootAction,
             loader: rootLoader,
             children: [
+                {
+                    index: true,
+                    element: <Index />
+                },
                 {
                     path: "/task/:taskListId",
                     element: <Task/>,
@@ -65,17 +56,10 @@ function Main() {
                     action: taskAction,
                 },
                 {
-                    path: "/calender",
-                    element: <Calender/>,
-                },
-
-                //todo fix destroy
-                {
-                    path: "contacts/:contactId/destroy",
+                    path: "/task/:taskListId/destroy",
                     action: destroyAction,
                     errorElement: <div>Oops! There was an error.</div>,
                 },
-
                 {
                     path: "/task/dailyTasks",
                     element: <DailyTasks/>
@@ -97,6 +81,10 @@ function Main() {
                     element: <TasksNavItem/>
                 },
 
+                {
+                    path: "/calender",
+                    element: <Calender/>,
+                },
             ]
         },
 
@@ -108,10 +96,6 @@ function Main() {
             element: <Login/>
         },
         {
-            path: "/logIn",
-            element: <Login/>,
-        },
-        {
             path: "/signIn",
             element: <SignIn/>
         }
@@ -119,7 +103,7 @@ function Main() {
 
     return (
         <>
-            {auth.currentUser ? (
+            {auth.currentUser !== null ? (
                 <RouterProvider router={router} fallbackElement={<Loading/>}/>
             ) : (
                 <RouterProvider router={LoginRouter} fallbackElement={<Loading/>}/>

@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import {ReactComponent as BAccountCircle} from '../assets/big-account-circle.svg'
 import {signOut} from "firebase/auth";
 import {useNavigate} from "react-router";
-import {useLoaderData} from "react-router-dom";
+import {redirect, useLoaderData} from "react-router-dom";
 
 
 export function UserInfo() {
@@ -12,14 +12,14 @@ export function UserInfo() {
 
 	function handleLogOut() {
 		signOut(auth).then(() => {
-			navigate('/logIn');
 			window.localStorage.clear();
 			window.sessionStorage.clear();
-			window.location.reload()
 			console.log("log-out successful");
 		}).catch((error) => {
 			console.error("log out something happen",error);
 		})
+
+		navigate('/');
 	}
 
 	//todo eliminate duplicate

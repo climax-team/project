@@ -19,17 +19,10 @@ export default function Login() {
             })
             .catch((err) => {
                 console.log(err);
-                navigate('/logIn');
+                navigate('/');
             });
 
-
-        if (auth.currentUser != null) {
-            navigate('/');
-            window.location.reload();
-        } else {
-            navigate('/logIn');
-        }
-
+        navigate('/');
     }
 
     const [email, setEmail] = useState("");
@@ -41,11 +34,9 @@ export default function Login() {
         await signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                console.log(user);
                 localStorage.setItem('userName', user.displayName);
                 localStorage.setItem('userEmail', user.email);
                 localStorage.setItem('userUid', user.uid);
-
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -54,12 +45,7 @@ export default function Login() {
                 console.log(errorMessage);
             });
 
-        if (auth.currentUser != null) {
             navigate('/');
-            window.location.reload();
-        } else {
-            navigate('/logIn');
-        }
     }
 
 

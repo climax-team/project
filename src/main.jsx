@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
-import {auth} from "./firebase-config.js";
+import {auth} from "../firebase-config.js";
 import {
     createBrowserRouter,
     RouterProvider,

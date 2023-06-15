@@ -1,18 +1,17 @@
-import {FirestoreDB, auth} from "./firebase-config.js";
+import {FirestoreDB, auth} from "../firebase-config.js";
 import {
     collection,
     doc,
     getDocs,
-    Timestamp,
     setDoc,
     deleteDoc,
     getDoc,
     updateDoc,
+    deleteField
 } from "firebase/firestore";
 
 import moment from "moment";
 import sortBy from "sort-by";
-import {v4 as uuid} from 'uuid';
 
 export async function getUserInfo() {
     const userInfoDocRef = doc(FirestoreDB, "user", auth.currentUser.uid);
@@ -100,6 +99,14 @@ export async function getTask(taskId) {
 
 
 
-export async function deleteTaskList(id) {
-    await deleteDoc(doc(FirestoreDB, auth.currentUser.uid, id));
+export async function deleteTaskList(taskListId) {
+    await deleteDoc(doc(FirestoreDB, auth.currentUser.uid, taskListId));
+}
+
+export async function deleteTask(taskListId,taskId) {
+    const taskListRef = doc(FirestoreDB, auth.currentUser.uid, taskListId);
+
+    await updateDoc(taskListRef, {
+        'taskList.tasks[0]' : deleteField()
+    });
 }

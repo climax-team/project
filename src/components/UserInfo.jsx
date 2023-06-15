@@ -1,4 +1,4 @@
-import {auth} from "../firebase-config.js";
+import {auth} from "../../firebase-config.js";
 import React, {useState} from "react";
 import {ReactComponent as BAccountCircle} from '../assets/big-account-circle.svg'
 import {signOut} from "firebase/auth";

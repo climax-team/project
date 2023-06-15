@@ -1,4 +1,4 @@
-import {auth, FirestoreDB} from "../../firebase-config.js";
+import {auth, FirestoreDB} from "../../../firebase-config.js";
 import {GoogleAuthProvider, signInWithRedirect, signInWithEmailAndPassword} from "firebase/auth";
 import {useState} from "react";
 import {redirect, useNavigate} from "react-router";

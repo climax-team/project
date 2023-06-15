@@ -5,15 +5,19 @@ import {ReactComponent as PeopleOutline} from '../assets/people_outline.svg'
 import {ReactComponent as TrashCan} from "../assets/trash_can.svg";
 import {ReactComponent as Pencil} from "../assets/pencil.svg";
 import {ReactComponent as XIcon} from "../assets/x-icon.svg";
+import {ReactComponent as Plus} from "../assets/plus.svg";
 import {Form} from "react-router-dom";
 
 export function TaskListPageBtn() {
     const [isListOptionPopUpShow, setIsListOptionPopUpShow] = useState(false);
     const [isSharePopUp, setIsSharePopUp] = useState(false);
+
     const popUpDelete = () => {
         setIsListOptionPopUpShow(false);
         setIsSharePopUp(false)
     }
+
+
 
     return (
         <>
@@ -21,20 +25,20 @@ export function TaskListPageBtn() {
                 <div id='share-btn'
                      onClick={() => setIsSharePopUp(true)}
                      className='w-9 h-9 bg-light_bg_color flex justify-center items-center rounded-lg m-1'
-                     style={{backgroundColor : isSharePopUp && '#9494ff'}}
+                     style={{backgroundColor: isSharePopUp && '#9494ff'}}
                 >
                     <PeopleOutline name='icon'/>
                 </div>
                 <div id='more_option-btn'
                      onClick={() => setIsListOptionPopUpShow(true)}
                      className='w-9 h-9 bg-light_bg_color flex justify-center items-center rounded-lg m-1'
-                     style={{backgroundColor : isListOptionPopUpShow && '#9494ff'}}
+                     style={{backgroundColor: isListOptionPopUpShow && '#9494ff'}}
                 >
                     <MoreVert name='icon'/>
                 </div>
             </div>
-            {isListOptionPopUpShow && <ListPopUp popUpDelete={popUpDelete}/>}
             {isSharePopUp && <SharePopUp popUpDelete={popUpDelete}/>}
+            {isListOptionPopUpShow && <ListPopUp popUpDelete={popUpDelete}/>}
 
         </>
     );
@@ -53,7 +57,8 @@ function SharePopUp({popUpDelete}) {
                     <div className='rounded-md w-2/5 h-3/4 max-w-md min-w-max bg-light_bg_color flex flex-col'
                          onClick={(event) => event.stopPropagation()}
                     >
-                        <div id='top' className='flex border-b-2 border-solid border-white justify-center items-center'>
+                        <div id='top-bar'
+                             className='flex border-b-2 border-solid border-white justify-center items-center'>
                             <div className='w-1/6 h-full'></div>
                             <div className='grow flex items-center justify-center'>
                                 <span className='text-white text-3xl my-3 '>share task list</span>
@@ -65,7 +70,21 @@ function SharePopUp({popUpDelete}) {
                             </div>
                         </div>
 
+                        <div id='content' className='flex flex-col h-full'>
+                            <div id='userList-area' className='h-full'>
 
+                            </div>
+                            <div id='bottom-bar' className='border-t-2 border-white border-solid flex p-3'>
+                                <div
+                                    className='flex justify-center items-center bg-deep_bg_color w-11 h-11 rounded-md mr-3 '>
+                                    <div className='flex items-center justify-center w-6 h-6'>
+                                        <Plus/>
+                                    </div>
+                                </div>
+                                <input type="text" placeholder='user id' className='rounded-md w-full px-3 bg-deep_bg_color text-white'
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

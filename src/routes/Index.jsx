@@ -3,9 +3,10 @@ export const Index = () => {
         <>
             <div id="zero-state" className='w-full h-full flex justify-center items-center flex-col text-white text-xl min-w-max'>
                 <span className='text-5xl mb-2'>TODO</span>
-                {/*todo change a tag link to project repository*/}
-                <div>
-                    Check out{" "}
+                <div className='text-center mt-3'>
+                    Check out
+                    <br/>
+                    the repository at{" "}
                     <a className='
                         underline
                         decoration-wavy
@@ -17,7 +18,7 @@ export const Index = () => {
                        target='_blank'
 
                     >
-                        the github at Kwon
+                         kwonsigyeong/todo-app
                     </a>
                     .
                 </div>

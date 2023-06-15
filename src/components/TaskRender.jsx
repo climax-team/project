@@ -40,7 +40,7 @@ export function TaskRender({userTasks, setIsEditorDisplayed, currentSelectedTask
                                     >
                                     </div>
                                 </div>
-                                <div id='task_info-text' className='w-full flex items-center text-white text-base'>
+                                <div id='task_info-text' className='w-full flex items-center text-white text-base overflow-auto'>
                                     <h1>
                                         {task.taskTitle}
                                     </h1>

@@ -14,7 +14,7 @@ export const Index = () => {
                         rounded-md
                         visited:decoration-accent_color
                         '
-                       href="https://github.com/kwonsigyeong"
+                       href="https://github.com/kwonsigyeong/todo-app"
                        target='_blank'
 
                     >

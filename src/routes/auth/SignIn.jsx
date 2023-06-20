@@ -25,10 +25,6 @@ export default function SignIn() {
             .then(async (userCredential) => {
                 const user = userCredential.user;
 
-                localStorage.setItem('userName', user.displayName);
-                localStorage.setItem('userEmail', user.email);
-                localStorage.setItem('userUid', user.uid);
-
                 const userData =
                     {
                         userData: {
@@ -40,7 +36,6 @@ export default function SignIn() {
 
                 await setDoc(doc(FirestoreDB, 'user', user.uid), userData);
 
-                navigate('/');
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -48,8 +43,7 @@ export default function SignIn() {
                 console.log(errorCode);
                 console.log(errorMessage);
             });
-
-
+        navigate('/');
     }
 
 

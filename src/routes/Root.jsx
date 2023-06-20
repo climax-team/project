@@ -14,6 +14,8 @@ import {SearchBar} from "../components/SearchBar.jsx";
 
 import {ReactComponent as Calender} from '../assets/calendar.svg'
 import {ReactComponent as Plus} from '../assets/plus.svg'
+import {getRedirectResult, GoogleAuthProvider} from "firebase/auth";
+import {auth} from "../../firebase-config.js";
 
 export async function action() {
     const taskList = await createTaskList();
@@ -21,6 +23,7 @@ export async function action() {
 }
 
 export async function loader() {
+
     const userAddedTaskLists = await getTaskLists();
     const userInfo = await getUserInfo();
 
@@ -29,8 +32,8 @@ export async function loader() {
 
 export default function Root() {
     const [currentSelectedTaskList, setCurrentSelectedTaskList] = useState(sessionStorage.getItem('currentSelectedTaskList'));
-
     sessionStorage.setItem('currentSelectedTaskList', currentSelectedTaskList);
+
 
     return (
         <>
@@ -73,7 +76,7 @@ export default function Root() {
                             <div className='m-2'>
                             <Calender name='icon'/>
                             </div>
-                            <span className='text-white ml-2 text-lg'>daily tasks</span>
+                            <span className='text-white ml-2 text-lg'>Calender</span>
                         </div>
                     </Link>
                     <Form method="post">

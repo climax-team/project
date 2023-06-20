@@ -1,13 +1,20 @@
 import {ReactComponent as EmptyStar} from "../assets/star-empty.svg"
+import {useEffect, useState} from "react";
 
 
 export function TaskRender({userTasks, setIsEditorDisplayed, currentSelectedTask, setCurrentSelectedTask}) {
     const taskObj = userTasks.tasks;
+    let currentTaskId = null;
 
-    const handleTaskClick = (taskId) => {
-        setIsEditorDisplayed(true);
-        setCurrentSelectedTask(taskId);
+    if (currentSelectedTask) {
+        currentTaskId = currentSelectedTask.taskId;
     }
+
+    const handleTaskClick = (task) => {
+        setIsEditorDisplayed(true);
+        setCurrentSelectedTask(task);
+    }
+
     return (
         <>
             {taskObj.length ? (
@@ -15,16 +22,16 @@ export function TaskRender({userTasks, setIsEditorDisplayed, currentSelectedTask
                     {
                         taskObj.map((task) =>
                             <li key={task.taskId}
-                                onClick={() => handleTaskClick(task.taskId)}
+                                onClick={() => handleTaskClick(task)}
                                 className='
-                                 h-14 my-1
-                                 rounded-md
                                  flex
-                                 items-center
-                                 justify-between
+                                 my-1
+                                 h-14
+                                 p-1
+                                 rounded-md
                                  bg-light_bg_color_op-50
                                  hover:bg-light_form_color'
-                                style={{background: currentSelectedTask === task.taskId && 'rgba(148, 148, 255, 0.5)'}}
+                                style={{background: currentTaskId === task.taskId && 'rgba(148, 148, 255, 0.5)'}}
                             >
                                 <div id='cheacker-radio' className='flex items-center justify-center '>
                                     {/*todo change component*/}
@@ -40,10 +47,11 @@ export function TaskRender({userTasks, setIsEditorDisplayed, currentSelectedTask
                                     >
                                     </div>
                                 </div>
-                                <div id='task_info-text' className='w-full flex items-center text-white text-base overflow-auto'>
-                                    <h1>
+                                <div id='task_info-text'
+                                     className='flex items-center break-all w-full text-left'>
+                                    <span className='text-base text-white '>
                                         {task.taskTitle}
-                                    </h1>
+                                    </span>
                                 </div>
                                 <div id='important_star-toggleBtn' className='flex items-center justify-center p-3'>
                                     <EmptyStar name='icon'/>

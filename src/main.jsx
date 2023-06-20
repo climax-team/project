@@ -30,13 +30,17 @@ import {
 import {Index} from "./routes/Index.jsx";
 
 
-
 function Main() {
     const [userObj, setUserObj] = useState(null);
 
-    useEffect( () => {
-    auth.onAuthStateChanged(() => setUserObj({}));
+    useEffect(() => {
+        auth.onAuthStateChanged((a) => {
+                console.log(a);
+                setUserObj({})
+            }
+        );
     }, []);
+
 
     const router = createBrowserRouter([
         {
@@ -47,7 +51,7 @@ function Main() {
             children: [
                 {
                     index: true,
-                    element: <Index />
+                    element: <Index/>
                 },
                 {
                     path: "/task/:taskListId",
@@ -113,8 +117,6 @@ function Main() {
     )
 }
 
-
-//todo styling loading page
 function Loading() {
     return (
         <div className='w-full h-full bg-deep_bg_color flex justify-center items-center'>
@@ -127,6 +129,6 @@ function Loading() {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <Main />
+        <Main/>
     </React.StrictMode>,
 )

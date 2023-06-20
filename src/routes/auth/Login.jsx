@@ -1,29 +1,25 @@
 import {auth, FirestoreDB} from "../../../firebase-config.js";
-import {GoogleAuthProvider, signInWithRedirect, signInWithEmailAndPassword} from "firebase/auth";
+import {
+    GoogleAuthProvider,
+    signInWithRedirect,
+    signInWithEmailAndPassword,
+    getRedirectResult
+} from "firebase/auth";
 import {useState} from "react";
 import {redirect, useNavigate} from "react-router";
-import {doc, getDoc, query, where} from "firebase/firestore";
+import {doc, getDoc, query, setDoc, where} from "firebase/firestore";
 
 
 export default function Login() {
     const navigate = useNavigate();
 
     //todo fix google authentication to redirect
-    function handleGoogleLogin() {
-        const provider = new GoogleAuthProvider();
-
-        signInWithRedirect(auth, provider)
-            .then((date) => {
-                const user = date.user;
-                console.log(user);
-            })
-            .catch((err) => {
-                console.log(err);
-                navigate('/');
-            });
+    async function handleGoogleLogin() {
+        await signInWithRedirect(auth, new GoogleAuthProvider());
 
         navigate('/');
     }
+
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -31,21 +27,8 @@ export default function Login() {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        await signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                localStorage.setItem('userName', user.displayName);
-                localStorage.setItem('userEmail', user.email);
-                localStorage.setItem('userUid', user.uid);
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode);
-                console.log(errorMessage);
-            });
+        await signInWithEmailAndPassword(auth, email, password);
 
-            navigate('/');
     }
 
 

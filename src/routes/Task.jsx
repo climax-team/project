@@ -15,6 +15,7 @@ import {TaskListPageBtn} from "../components/TaskListPageBtn.jsx";
 export async function action({params}) {
     const taskList = await getTaskList(params.taskListId);
 
+    console.log('action');
     return {taskList}
 }
 
@@ -27,9 +28,11 @@ export async function loader({params}) {
 
 export default function Task() {
     const {taskList, taskListId} = useLoaderData();
+
     const [isTaskAddInputFocus, setIsTaskAddInputFocus] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const [tasks, setTasks] = useState(taskList);
+    console.log('setTasks',tasks);
 
     const [currentSelectedTask, setCurrentSelectedTask] = useState(null);
     const [isEditorDisplayed, setIsEditorDisplayed] = useState(false);
@@ -39,11 +42,9 @@ export default function Task() {
         setIsEditorDisplayed(false)
     }, [sessionStorage.getItem('currentSelectedTaskList')]);
 
-
     useEffect(() => {
         setTasks(taskList);
     }, [taskList]);
-
 
     const handleInputFocusChange = () => {
         setIsTaskAddInputFocus(!isTaskAddInputFocus);
@@ -72,7 +73,7 @@ export default function Task() {
 
     return (
         <div id='task_content-container' className='flex w-full h-full'>
-            <div id='content-area' className='mx-14 h-full w-full flex flex-col min-w-max'>
+            <div id='content-area' className='mx-14 h-full w-full flex flex-col'>
                 <div id='top_content-area' className='flex w-full mt-8'>
                     <div id='task_list-title' className='w-full min-w-200'>
                         <h1 className='text-white text-5xl'>
@@ -119,7 +120,6 @@ export default function Task() {
                                         text-white
                                         border-0
                                         outline-none
-
                                         '
                                    value={inputValue}
                                    onChange={(e) => setInputValue(e.target.value)}
@@ -131,6 +131,7 @@ export default function Task() {
                 </div>
             </div>
             {isEditorDisplayed === true && <TaskEditor
+                setTasks={setTasks}
                 setIsEditorDisplayed={setIsEditorDisplayed}
                 setCurrentSelectedTask={setCurrentSelectedTask}
                 currentSelectedTask={currentSelectedTask}

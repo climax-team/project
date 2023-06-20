@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {getTask} from "../taskListControler.js";
+import {deleteTask, getTaskList} from "../taskListControler.js";
 import {ChackCircle} from "./ChackCircle.jsx";
 
 import {ReactComponent as XIcon} from "../assets/x-icon.svg";
@@ -8,25 +8,30 @@ import {ReactComponent as SunStroke} from "../assets/sun-stroke.svg";
 import {ReactComponent as Repeat} from "../assets/repeat.svg";
 import {ReactComponent as TrashCan} from "../assets/trash_can.svg";
 import {ReactComponent as Note} from "../assets/note.svg";
+import {Form, useLoaderData} from "react-router-dom";
+import {useNavigate} from "react-router";
 
 
-export function TaskEditor({setIsEditorDisplayed, setCurrentSelectedTask, currentSelectedTask}) {
-
-    const [currentTaskInfo, setCurrentTaskInfo] = useState({});
+export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTask, currentSelectedTask}) {
+    const {taskListId} = useLoaderData();
+    const navigate = useNavigate();
     const handleXClick = () => {
         setCurrentSelectedTask(null);
         setIsEditorDisplayed(false);
     }
 
-    useEffect(() => {
-        async function getTaskInfo() {
-            setCurrentTaskInfo(await getTask(currentSelectedTask));
+    console.log(currentSelectedTask);
+
+    const handleTaskDelete = async (e) => {
+        if (!confirm(`"${currentSelectedTask.taskTitle}" will be permanently deleted.`)) {
+            e.preventDefault();
+        } else {
+            await deleteTask(currentSelectedTask.taskId);
+            setIsEditorDisplayed(false);
+            setCurrentSelectedTask(null);
+            setTasks(await getTaskList(taskListId));
         }
-
-        void getTaskInfo();
-    }, [currentSelectedTask]);
-
-
+    }
 
     return (
         <div className='bg-light_bg_color w-full max-w-sm h-full min-w-360 flex flex-col'>
@@ -36,21 +41,35 @@ export function TaskEditor({setIsEditorDisplayed, setCurrentSelectedTask, curren
                 </div>
             </div>
             <div id='task-editor' className='px-3 h-full'>
-                <div id='taskSperater' className='rounded-md bg-deep_bg_color'>
-                    <div id='task_titele' className='flex items-center'>
-                        <div className='m-3.5'>
-                            <ChackCircle size='24px' borderWidth='2.5px'/>
+                <div id='low_level-todo' className='rounded-md bg-deep_bg_color'>
+                    <div id='title-task'>
+                        <div id='task_titele' className='flex items-center'>
+                            <div className='m-3.5'>
+                                <ChackCircle size='24px' borderWidth='2.5px'/>
+                            </div>
+                            <div className='w-full flex break-all my-2'>
+                            <span className='text-white text-xl '>
+                                {currentSelectedTask.taskTitle}
+                            </span>
+                            </div>
+                            <div className='w-3.5 h-3.5 flex items-center justify-center mx-3'>
+                                <Star/>
+                            </div>
                         </div>
-                        <span className='text-white text-xl w-full'>
-                            {currentTaskInfo.taskTitle}
-                        </span>
-                        <div className='w-3.5 h-3.5 flex items-center justify-center mx-3'>
-                            <Star/>
-                        </div>
+                    </div>
+
+                    <div id='low_level-tasks' className='mt-2'>
+                        asdfasf
+                        asdfasf
+                        asdfasdf
+                    </div>
+
+                    <div id='low_level_task-input'>
+                        <input type="text"/>
                     </div>
                 </div>
 
-                <div id='add_to_detail-btn' className='bg-deep_bg_color flex items-center my-2 rounded-md' >
+                <div id='add_to_detail-btn' className='bg-deep_bg_color flex items-center my-2 rounded-md'>
                     <div className='m-3.5 flex items-center justify-center'>
                         <SunStroke/>
                     </div>
@@ -95,7 +114,9 @@ export function TaskEditor({setIsEditorDisplayed, setCurrentSelectedTask, curren
                     <span className='text-white text-lg'>added by user_1234 </span>
                 </div>
                 <div className='mx-2'>
-                    <TrashCan fill='#ffffff'/>
+                    <div className='flex' onClick={(e) => handleTaskDelete(e)}>
+                        <TrashCan fill='#ffffff'/>
+                    </div>
                 </div>
             </div>
         </div>

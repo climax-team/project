@@ -7,15 +7,17 @@ import {
     deleteDoc,
     getDoc,
     updateDoc,
-    deleteField
+    deleteField, query, where
 } from "firebase/firestore";
 
 import moment from "moment";
 import sortBy from "sort-by";
+import {Await} from "react-router";
 
 export async function getUserInfo() {
     const userInfoDocRef = doc(FirestoreDB, "user", auth.currentUser.uid);
     const userInfoDocSnap = await getDoc(userInfoDocRef);
+
 
     return userInfoDocSnap.data().userData
 }
@@ -83,30 +85,18 @@ export async function getTaskLists() {
     return userTaskLists.sort(sortBy("last", "createdAt"));
 }
 
-export async function getTask(taskId) {
-    const userRef = doc(FirestoreDB, auth.currentUser.uid, sessionStorage.getItem('currentSelectedTaskList'));
-
-    const docSnap = await getDoc(userRef);
-
-    if (docSnap.exists()) {
-        const array = docSnap.data().taskList.tasks;
-        const index = array.findIndex(e => e.taskId === taskId);
-        return array[index];
-    } else {
-        return console.error("No such document!");
-    }
-}
-
-
-
 export async function deleteTaskList(taskListId) {
     await deleteDoc(doc(FirestoreDB, auth.currentUser.uid, taskListId));
 }
 
-export async function deleteTask(taskListId,taskId) {
-    const taskListRef = doc(FirestoreDB, auth.currentUser.uid, taskListId);
+export async function deleteTask(currentTaskId) {
+    const taskListRef = doc(FirestoreDB, auth.currentUser.uid, sessionStorage.getItem('currentSelectedTaskList'));
+    const docSnap = await getDoc(taskListRef);
 
-    await updateDoc(taskListRef, {
-        'taskList.tasks[0]' : deleteField()
-    });
+    const taskList = docSnap.data().taskList.tasks
+
+    const index = taskList.findIndex(obj => obj.taskId === currentTaskId);
+
+    taskList.splice(index, 1);
+    await updateDoc(taskListRef, {'taskList.tasks' : taskList});
 }

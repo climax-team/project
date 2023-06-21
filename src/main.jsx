@@ -34,8 +34,7 @@ function Main() {
     const [userObj, setUserObj] = useState(null);
 
     useEffect(() => {
-        auth.onAuthStateChanged((a) => {
-                console.log(a);
+        auth.onAuthStateChanged(() => {
                 setUserObj({})
             }
         );

@@ -15,7 +15,6 @@ import {TaskListPageBtn} from "../components/TaskListPageBtn.jsx";
 export async function action({params}) {
     const taskList = await getTaskList(params.taskListId);
 
-    console.log('action');
     return {taskList}
 }
 
@@ -32,7 +31,6 @@ export default function Task() {
     const [isTaskAddInputFocus, setIsTaskAddInputFocus] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const [tasks, setTasks] = useState(taskList);
-    console.log('setTasks',tasks);
 
     const [currentSelectedTask, setCurrentSelectedTask] = useState(null);
     const [isEditorDisplayed, setIsEditorDisplayed] = useState(false);
@@ -51,6 +49,7 @@ export default function Task() {
     }
 
     const handleSubmit = async () => {
+        //making task
         const taskObj = {
             taskId: uuid(),
             taskTitle: inputValue,
@@ -59,6 +58,8 @@ export default function Task() {
             isImportant: false,
             isLowRankListExist: false,
             isRepeat: false,
+            isDaily: false,
+            isCompleted: false,
             lowRankTasks: [],
             memo: "",
             pushNotificationDateTime: Timestamp.fromDate(new Date()),
@@ -86,6 +87,7 @@ export default function Task() {
                     <div id='tasks' className='h-5/6 mt-10 overflow-auto pb-1 rounded-md'>
                         <TaskRender
                             userTasks={tasks}
+                            setUserTasks={setTasks}
                             setIsEditorDisplayed={setIsEditorDisplayed}
                             currentSelectedTask={currentSelectedTask}
                             setCurrentSelectedTask={setCurrentSelectedTask}

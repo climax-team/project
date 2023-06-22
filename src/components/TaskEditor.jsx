@@ -7,19 +7,22 @@ import {ReactComponent as SunStroke} from "../assets/sun-stroke.svg";
 import {ReactComponent as Repeat} from "../assets/repeat.svg";
 import {ReactComponent as TrashCan} from "../assets/trash_can.svg";
 import {ReactComponent as Note} from "../assets/note.svg";
+import {ReactComponent as Plus} from "../assets/plus.svg";
 import {useLoaderData} from "react-router-dom";
-
+import {ChackCircle} from "./ChackCircle.jsx";
+import {useCallback, useRef, useState} from "react";
+import moment from "moment";
 
 export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTask, currentSelectedTask}) {
     const {taskListId} = useLoaderData();
 
-
+    const [isLowTaskInputFocus, setIsLowTaskInputFocus] = useState(false);
+    const [LowTaskInputValue, setLowTaskInputValue] = useState('');
 
     const handleXClick = () => {
         setCurrentSelectedTask(null);
         setIsEditorDisplayed(false);
     }
-
 
     const handleTaskDelete = async (e) => {
         if (!confirm(`"${currentSelectedTask.taskTitle}" will be permanently deleted.`)) {
@@ -46,6 +49,17 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
         setCurrentSelectedTask(await getTask(currentSelectedTask.taskId, taskListId));
         setTasks(await getTaskList(taskListId));
     }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        console.log('submit');
+
+    }
+
+    const textRef = useRef();
+    const handleResizeHeight = useCallback(() => {
+        textRef.current.style.height = textRef.current.scrollHeight + "px";
+    }, []);
 
     return (
         <div className='bg-light_bg_color w-full max-w-sm h-full min-w-360 flex flex-col'>
@@ -113,8 +127,28 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
                         task
                     </div>
 
-                    <div id='low_level_task-input'>
-                        <input type="text"/>
+                    <div id='low_level_task-input' className='flex items-center'>
+                        <div className='ml-4 mr-4 mb-4 mt-2 flex'>
+                            {isLowTaskInputFocus ?
+                                <ChackCircle size='18px' borderWidth='2px'/>
+                                :
+                                <Plus width='14' height='14'/>
+                            }
+                        </div>
+                        <form onSubmit={(e) => {
+                            LowTaskInputValue === "" ? e.preventDefault() : handleSubmit(e);
+                        }}
+                        >
+                            <input type="text"
+                                   className='placeholder:text-white mb-3 text-white outline-none placeholder-transparent'
+                                   placeholder='add step'
+                                   value={LowTaskInputValue}
+                                   onChange={(e) => setLowTaskInputValue(e.target.value)}
+                                   onFocus={() => setIsLowTaskInputFocus(!isLowTaskInputFocus)}
+                                   onBlur={() => setIsLowTaskInputFocus(!isLowTaskInputFocus)}
+                                   style={{background: "transparent"}}
+                            />
+                        </form>
                     </div>
                 </div>
 
@@ -144,10 +178,14 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
                 </div>
 
                 <div id='memo' className='bg-deep_bg_color rounded-md py-2 my-2'>
-                    <textarea name="task-memo"
-                              rows="3"
-                              placeholder='add memo'
-                              className='
+                    <textarea
+                        ref={textRef}
+                        name="task-memo"
+                        rows="3"
+                        placeholder='add memo'
+                        onInput={handleResizeHeight}
+                        className='
+                        styles.content_text
                                     w-full
                                     px-4 py-3
                                     bg-deep_bg_color
@@ -161,7 +199,14 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
 
             <div id='bottom' className='flex items-center text-white p-2 border-t-2'>
                 <div className='w-full flex justify-center items-center'>
-                    <span className='text-white text-lg'>added by user_1234 </span>
+                    {
+                        currentSelectedTask.isShared ?
+                            <span
+                                className='text-white text-lg'>added by {currentSelectedTask.createdBy} ({moment(currentSelectedTask.createdAt.toDate()).format('ddd, MMM DD YYYY')}) </span>
+                            :
+                            <span
+                                className='text-white text-lg'>created at {moment(currentSelectedTask.createdAt.toDate()).format('ddd, MMM DD YYYY')} </span>
+                    }
                 </div>
                 <div className='mx-2'>
                     <div className='flex' onClick={(e) => handleTaskDelete(e)}>

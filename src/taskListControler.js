@@ -7,9 +7,9 @@ import {
     deleteDoc,
     getDoc,
     updateDoc,
+    Timestamp,
 } from "firebase/firestore";
 
-import moment from "moment";
 import sortBy from "sort-by";
 
 export async function getUserInfo() {
@@ -22,13 +22,11 @@ export async function getUserInfo() {
 
 export async function createTaskList() {
     let id = Math.random().toString(36).substring(2, 9);
-    const now = moment();
 
     const addedTaskList = {
         taskList: {
             id: id,
-            createdAt: Date.now(),
-            createdDate: now.format(),
+            createdAt: Timestamp.fromDate(new Date()),
             taskListTitle: "no name List",
             tasks: [],
         }

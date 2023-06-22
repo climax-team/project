@@ -1,5 +1,5 @@
 import {Form, useLoaderData} from "react-router-dom";
-import {createTask, getTaskList} from "../taskListControler.js";
+import {createTask, getTaskList, getUserInfo} from "../taskListControler.js";
 
 import {TaskRender} from "../components/TaskRender.jsx";
 import React, {useEffect, useState} from "react";
@@ -11,6 +11,7 @@ import {Timestamp} from "firebase/firestore";
 
 import {ReactComponent as Plus} from '../assets/plus.svg'
 import {TaskListPageBtn} from "../components/TaskListPageBtn.jsx";
+import {auth} from "../../firebase-config.js";
 
 export async function action({params}) {
     const taskList = await getTaskList(params.taskListId);
@@ -44,20 +45,20 @@ export default function Task() {
         setTasks(taskList);
     }, [taskList]);
 
-    const handleInputFocusChange = () => {
-        setIsTaskAddInputFocus(!isTaskAddInputFocus);
-    }
-
     const handleSubmit = async () => {
+        const user = await getUserInfo();
+        const userName = auth.currentUser.displayName !== null ?
+            auth.currentUser.displayName : user.userName;
+
         //making task
         const taskObj = {
+            createdBy: userName,
             taskId: uuid(),
             taskTitle: inputValue,
             assignment: [],
             RepeatCycle: null,
             isImportant: false,
-            isLowRankListExist: false,
-            isRepeat: false,
+            isShared: false,
             isDaily: false,
             isCompleted: false,
             lowRankTasks: [],
@@ -111,7 +112,7 @@ export default function Task() {
                         }
                         <Form
                             onSubmit={(e) => {
-                            inputValue === "" ? e.preventDefault() : void handleSubmit();
+                                inputValue === "" ? e.preventDefault() : void handleSubmit();
                             }}
                             className='w-full'>
                             <input type='text'
@@ -125,8 +126,8 @@ export default function Task() {
                                         '
                                    value={inputValue}
                                    onChange={(e) => setInputValue(e.target.value)}
-                                   onFocus={handleInputFocusChange}
-                                   onBlur={handleInputFocusChange}
+                                   onFocus={() => setIsTaskAddInputFocus(!isTaskAddInputFocus)}
+                                   onBlur={() => setIsTaskAddInputFocus(!isTaskAddInputFocus)}
                                    placeholder='add task'/>
                         </Form>
                     </div>

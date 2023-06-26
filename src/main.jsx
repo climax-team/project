@@ -1,34 +1,39 @@
 import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import {auth} from "../firebase-config.js";
+
+import './styles/index.css'
+import DailyTasks, {
+    action as dailyAction,
+    loader as dailyLoader
+} from "./routes/FixedTaskLists/DailyTasks.jsx";
+import {Important} from "./routes/FixedTaskLists/Important.jsx";
+import {Plan} from "./routes/FixedTaskLists/Plan.jsx";
+import {AboutMe} from "./routes/FixedTaskLists/AboutMe.jsx";
+import {TasksNavItem} from "./routes/FixedTaskLists/Tasks-nav-item.jsx";
+import {Calender} from "./routes/Calender.jsx";
+import Task from "./routes/Task.jsx";
+import Login from "./routes/auth/Login.jsx";
+import SignIn from "./routes/auth/SignIn.jsx";
+
 import {
     createBrowserRouter,
     RouterProvider,
 } from "react-router-dom";
 
-import './styles/index.css'
-import {DailyTasks} from "./routes/FixedTaskLists/DailyTasks.jsx";
-import {Important} from "./routes/FixedTaskLists/Important.jsx";
-import {Plan} from "./routes/FixedTaskLists/Plan.jsx";
-import {AboutMe} from "./routes/FixedTaskLists/AboutMe.jsx";
-import {TasksNavItem} from "./routes/FixedTaskLists/Tasks-nav-item.jsx";
-import Task from "./routes/Task.jsx";
-import Login from "./routes/auth/Login.jsx";
-import SignIn from "./routes/auth/SignIn.jsx";
-
-import {Calender} from "./routes/Calender.jsx";
 import Root, {
     action as rootAction,
     loader as rootLoader,
 } from "./routes/Root.jsx";
 
-import {action as destroyAction} from "./routes/destroy";
+import {action as destroyAction} from "./routes/Destroy.jsx";
 import {
     loader as taskLoader,
-    action as taskAction
 } from './routes/Task.jsx';
-import {Index} from "./routes/Index.jsx";
 
+
+import {Index} from "./routes/Index.jsx";
+import SearchPage from "./routes/SearchPage.jsx";
 
 function Main() {
     const [userObj, setUserObj] = useState(null);
@@ -56,7 +61,14 @@ function Main() {
                     path: "/task/:taskListId",
                     element: <Task/>,
                     loader: taskLoader,
-                    action: taskAction,
+                },
+                {
+                    path: "/search",
+                    element: <SearchPage/>
+                },
+                {
+                    path: "/calender",
+                    element: <Calender/>,
                 },
                 {
                     path: "/task/:taskListId/destroy",
@@ -65,7 +77,9 @@ function Main() {
                 },
                 {
                     path: "/task/dailyTasks",
-                    element: <DailyTasks/>
+                    element: <DailyTasks/>,
+                    action: dailyAction,
+                    loader: dailyLoader
                 },
                 {
                     path: "/task/important",
@@ -82,11 +96,6 @@ function Main() {
                 {
                     path: "/task/tasks",
                     element: <TasksNavItem/>
-                },
-
-                {
-                    path: "/calender",
-                    element: <Calender/>,
                 },
             ]
         },

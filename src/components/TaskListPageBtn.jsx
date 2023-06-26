@@ -8,7 +8,7 @@ import {ReactComponent as XIcon} from "../assets/x-icon.svg";
 import {ReactComponent as Plus} from "../assets/plus.svg";
 import {Form} from "react-router-dom";
 
-export function TaskListPageBtn() {
+export function TaskListPageBtn({setIsTaskListTitleChanging}) {
     const [isListOptionPopUpShow, setIsListOptionPopUpShow] = useState(false);
     const [isSharePopUp, setIsSharePopUp] = useState(false);
 
@@ -17,6 +17,10 @@ export function TaskListPageBtn() {
         setIsSharePopUp(false)
     }
 
+    const handleChangeListTitleClick = () => {
+        setIsListOptionPopUpShow(false);
+        setIsTaskListTitleChanging(true);
+    }
 
 
     return (
@@ -38,7 +42,7 @@ export function TaskListPageBtn() {
                 </div>
             </div>
             {isSharePopUp && <SharePopUp popUpDelete={popUpDelete}/>}
-            {isListOptionPopUpShow && <ListPopUp popUpDelete={popUpDelete}/>}
+            {isListOptionPopUpShow && <ListPopUp popUpDelete={popUpDelete} handleChangeListTitleClick={handleChangeListTitleClick}/>}
 
         </>
     );
@@ -92,7 +96,7 @@ function SharePopUp({popUpDelete}) {
     );
 }
 
-function ListPopUp({popUpDelete}) {
+function ListPopUp({popUpDelete, handleChangeListTitleClick}) {
     return (
         <>
             <div
@@ -117,7 +121,8 @@ function ListPopUp({popUpDelete}) {
                     </div>
 
                     <div id='bottom' className='flex justify-center items-center min-w-max flex-col px-3 pt-4'>
-                        <div className='flex items-center w-full bg-deep_bg_color rounded-md mb-2'>
+                        <div onClick={handleChangeListTitleClick}
+                             className='flex items-center w-full bg-deep_bg_color rounded-md mb-2'>
                             <div className='flex m-4'>
                                 <Pencil/>
                             </div>

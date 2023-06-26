@@ -10,7 +10,7 @@ import {ReactComponent as Note} from "../assets/note.svg";
 import {ReactComponent as Plus} from "../assets/plus.svg";
 import {useLoaderData} from "react-router-dom";
 import {ChackCircle} from "./ChackCircle.jsx";
-import {useCallback, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import moment from "moment";
 
 export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTask, currentSelectedTask}) {
@@ -18,6 +18,13 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
 
     const [isLowTaskInputFocus, setIsLowTaskInputFocus] = useState(false);
     const [LowTaskInputValue, setLowTaskInputValue] = useState('');
+    const [memo, setMemo] = useState('');
+    const textRef = useRef();
+
+    useEffect(() => {
+        setMemo(currentSelectedTask.memo);
+    }, [currentSelectedTask]);
+
 
     const handleXClick = () => {
         setCurrentSelectedTask(null);
@@ -42,7 +49,6 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
         setTasks(await getTaskList(taskListId));
     }
 
-
     const handleCheckCircleClick = async () => {
         await taskEditFunctionConnector(currentSelectedTask.taskId, 'complete');
 
@@ -53,10 +59,13 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
     function handleSubmit(e) {
         e.preventDefault();
         console.log('submit');
-
     }
 
-    const textRef = useRef();
+    const handleMemoSave = async () => {
+        await taskEditFunctionConnector(currentSelectedTask.taskId, 'saveMemo', memo);
+        setTasks(await getTaskList(taskListId));
+    }
+
     const handleResizeHeight = useCallback(() => {
         textRef.current.style.height = textRef.current.scrollHeight + "px";
     }, []);
@@ -68,7 +77,7 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
                     <XIcon/>
                 </div>
             </div>
-            <div id='task-editor' className='px-3 h-full'>
+            <div id='task-editor' className='px-3 h-full overflow-auto'>
                 <div id='low_level-todo' className='rounded-md bg-deep_bg_color'>
                     <div id='title-task'>
                         <div id='task-titele' className='flex items-center'>
@@ -82,6 +91,7 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
                                               border-solid
                                               border-white
                                               flex items-center justify-center
+                                              bg-accent_color
                                               '
                                         >
                                             <div>
@@ -179,9 +189,13 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
 
                 <div id='memo' className='bg-deep_bg_color rounded-md py-2 my-2'>
                     <textarea
+                        onBlur={handleMemoSave}
+                        onChange={(e) => setMemo(e.target.value)}
+                        value={memo}
                         ref={textRef}
                         name="task-memo"
                         rows="3"
+                        maxLength="500"
                         placeholder='add memo'
                         onInput={handleResizeHeight}
                         className='
@@ -193,6 +207,7 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
                                     text-white
                               '
                     >
+                        {currentSelectedTask.memo}
                     </textarea>
                 </div>
             </div>

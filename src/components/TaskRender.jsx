@@ -15,11 +15,9 @@ export function TaskRender({
                                setIsEditorDisplayed,
                            }) {
     const {taskListId} = useLoaderData();
-
-    const taskObj = userTasks.tasks;
     let currentTaskId = null;
-    const inCompletedTasks = taskObj.filter(task => task.isCompleted === false);
-    const completedTasks = taskObj.filter(task => task.isCompleted === true);
+    const inCompletedTasks = userTasks.filter(task => task.isCompleted === false);
+    const completedTasks = userTasks.filter(task => task.isCompleted === true);
 
     const [isCompletedListShow, setIsCompletedListShow] = useState(true);
 
@@ -28,7 +26,6 @@ export function TaskRender({
     }
 
     const handleTaskClick = (task) => {
-        console.log('task');
         setIsEditorDisplayed(true);
         setCurrentSelectedTask(task);
     }
@@ -47,7 +44,7 @@ export function TaskRender({
 
     return (
         <>
-            {taskObj.length ? (
+            {userTasks.length ? (
                 <ul className=''>
                     <div id='inCompleted_tasks'>
                         {
@@ -138,6 +135,7 @@ export function TaskRender({
                                             }}
                                             className='
                                       w-5 h-5
+                                      bg-accent_color
                                       rounded-full
                                       ml-4 mr-3
                                       border-2

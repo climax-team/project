@@ -14,7 +14,6 @@ import {useCallback, useEffect, useRef, useState} from "react";
 import moment from "moment";
 
 export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTask, currentSelectedTask}) {
-    const {taskListId} = useLoaderData();
 
     const [isLowTaskInputFocus, setIsLowTaskInputFocus] = useState(false);
     const [LowTaskInputValue, setLowTaskInputValue] = useState('');
@@ -35,25 +34,25 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
         if (!confirm(`"${currentSelectedTask.taskTitle}" will be permanently deleted.`)) {
             e.preventDefault();
         } else {
-            await taskEditFunctionConnector(taskListId, currentSelectedTask.taskId, 'delete');
+            await taskEditFunctionConnector(currentSelectedTask.taskListId, currentSelectedTask.taskId, 'delete');
             setIsEditorDisplayed(false);
             setCurrentSelectedTask(null);
-            setTasks(await getTaskList(taskListId));
+            setTasks(await getTaskList(currentSelectedTask.taskListId));
         }
     }
 
     const handleAddDailyTaskClick = async () => {
-        await taskEditFunctionConnector(taskListId, currentSelectedTask.taskId, 'addToDailyTask');
+        await taskEditFunctionConnector(currentSelectedTask.taskListId, currentSelectedTask.taskId, 'addToDailyTask');
 
-        setCurrentSelectedTask(await getTask(currentSelectedTask.taskId, taskListId));
-        setTasks(await getTaskList(taskListId));
+        setCurrentSelectedTask(await getTask(currentSelectedTask.taskId, currentSelectedTask.taskListId));
+        setTasks(await getTaskList(currentSelectedTask.taskListId));
     }
 
     const handleCheckCircleClick = async () => {
-        await taskEditFunctionConnector(taskListId, currentSelectedTask.taskId, 'complete');
+        await taskEditFunctionConnector(currentSelectedTask.taskListId, currentSelectedTask.taskId, 'complete');
 
-        setCurrentSelectedTask(await getTask(currentSelectedTask.taskId, taskListId));
-        setTasks(await getTaskList(taskListId));
+        setCurrentSelectedTask(await getTask(currentSelectedTask.taskId, currentSelectedTask.taskListId));
+        setTasks(await getTaskList(currentSelectedTask.taskListId));
     }
 
     function handleSubmit(e) {
@@ -62,8 +61,8 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
     }
 
     const handleMemoSave = async () => {
-        await taskEditFunctionConnector(taskListId, currentSelectedTask.taskId, 'saveMemo', memo);
-        setTasks(await getTaskList(taskListId));
+        await taskEditFunctionConnector(currentSelectedTask.taskListId, currentSelectedTask.taskId, 'saveMemo', memo);
+        setTasks(await getTaskList(currentSelectedTask.taskListId));
     }
 
     const handleResizeHeight = useCallback(() => {
@@ -71,10 +70,10 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
     }, []);
 
     const handleStarClick = async (taskId) => {
-        await taskEditFunctionConnector(taskListId, taskId, 'important');
+        await taskEditFunctionConnector(currentSelectedTask.taskListId, taskId, 'important');
 
-        setCurrentSelectedTask(await getTask(currentSelectedTask.taskId, taskListId));
-        setTasks(await getTaskList(taskListId));
+        setCurrentSelectedTask(await getTask(currentSelectedTask.taskId, currentSelectedTask.taskListId));
+        setTasks(await getTaskList(currentSelectedTask.taskListId));
     }
 
     return (

@@ -7,11 +7,11 @@ import {TaskEditor} from "../components/TaskEditor.jsx";
 import {ChackCircle} from "../components/ChackCircle.jsx";
 
 import {v4 as uuid} from 'uuid';
-import {Timestamp} from "firebase/firestore";
+import {doc, getDoc, Timestamp, updateDoc} from "firebase/firestore";
 
 import {ReactComponent as Plus} from '../assets/plus.svg'
 import {TaskListPageBtn} from "../components/TaskListPageBtn.jsx";
-import {auth} from "../../firebase-config.js";
+import {auth, FirestoreDB} from "../../firebase-config.js";
 
 export async function action({params}) {
     const taskList = await getTaskList(params.taskListId);
@@ -79,8 +79,9 @@ export default function Task() {
 
 
     //todo title change function
-    const handleTitleChangeValueSave = (e) => {
-        e.preventDefault();
+    const handleTitleChangeValueSave = async () => {
+        const taskListRef = doc(FirestoreDB, auth.currentUser.uid, tasks.id);
+        await updateDoc(taskListRef, {taskListTitle: titleChangingValue})
 
         setIsTaskListTitleChanging(false);
     }
@@ -92,15 +93,15 @@ export default function Task() {
                     <div id='task_list-title' className='w-full min-w-200 flex'>
                         {
                             isTaskListTitleChanging ?
-                                    <textarea
+                                <Form onSubmit={handleTitleChangeValueSave}>
+                                    <input
+                                        type='text'
                                         onBlur={handleTitleChangeValueSave}
                                         onChange={(e) => setTitleChangingValue(e.target.value)}
-                                        value={titleChangingValue}
                                         className='text-5xl text-white bg-light_bg_color resize-none h-14'
-                                        wrap='off'
-                                    >
-                                        {tasks.taskListTitle}
-                                    </textarea>
+                                        defaultValue={tasks.taskListTitle}
+                                    />
+                                </Form>
                                 :
                                 <h1 className='text-white text-5xl'>
                                     {tasks.taskListTitle}

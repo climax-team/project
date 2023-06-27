@@ -7,7 +7,10 @@ import DailyTasks, {
     action as dailyAction,
     loader as dailyLoader
 } from "./routes/FixedTaskLists/DailyTasks.jsx";
-import {Important} from "./routes/FixedTaskLists/Important.jsx";
+import Important, {
+    action as importantAction,
+    loader as importantLoader
+} from "./routes/FixedTaskLists/Important.jsx";
 import {Plan} from "./routes/FixedTaskLists/Plan.jsx";
 import {AboutMe} from "./routes/FixedTaskLists/AboutMe.jsx";
 import {TasksNavItem} from "./routes/FixedTaskLists/Tasks-nav-item.jsx";
@@ -83,7 +86,9 @@ function Main() {
                 },
                 {
                     path: "/task/important",
-                    element: <Important/>
+                    element: <Important/>,
+                    action: importantAction,
+                    loader: importantLoader
                 },
                 {
                     path: "/task/plan",

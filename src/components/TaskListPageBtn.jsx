@@ -25,7 +25,7 @@ export function TaskListPageBtn({setIsTaskListTitleChanging}) {
 
     return (
         <>
-            <div id='task_list-button' className='flex w-full justify-end items-center'>
+            <div id='task_list-button' className='flex w-full justify-end items-center z-50'>
                 <div id='share-btn'
                      onClick={() => setIsSharePopUp(true)}
                      className='w-9 h-9 bg-light_bg_color flex justify-center items-center rounded-lg m-1'

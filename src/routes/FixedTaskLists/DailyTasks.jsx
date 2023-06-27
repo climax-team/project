@@ -1,8 +1,7 @@
-
 import React, {useEffect, useState} from "react";
 
 import {v4 as uuid} from 'uuid';
-import {collection, doc, getDoc, getDocs, query, Timestamp, where} from "firebase/firestore";
+import {collection, getDocs, Timestamp} from "firebase/firestore";
 
 import {ReactComponent as Plus} from '../../assets/plus.svg'
 import {Form, useLoaderData} from "react-router-dom";
@@ -13,119 +12,119 @@ import {ChackCircle} from "../../components/ChackCircle.jsx";
 import {TaskEditor} from "../../components/TaskEditor.jsx";
 
 export async function action({params}) {
-	const taskList = await getTaskList(params.taskListId);
+    const taskList = await getTaskList(params.taskListId);
 
-	return {taskList};
+    return {taskList};
 }
 
 export async function loader() {
-	const taskListId = 'daily';
+    const taskListId = 'dailyTasks';
 
-	const taskRef = collection(FirestoreDB, auth.currentUser.uid);
-	const Snapshot = await getDocs(taskRef);
+    const taskRef = collection(FirestoreDB, auth.currentUser.uid);
+    const Snapshot = await getDocs(taskRef);
 
-	const allTaskArray = [];
-	Snapshot.forEach((doc) => {
-		allTaskArray.push(...doc.data().tasks);
-	});
+    const allTaskArray = [];
+    Snapshot.forEach((doc) => {
+        allTaskArray.push(...doc.data().tasks);
+    });
 
-	console.log(allTaskArray);
+    console.log(allTaskArray);
 
-	const taskList = allTaskArray.filter(task => task.isDaily === true);
+    const taskList = allTaskArray.filter(task => task.isDaily === true);
 
-	console.log(taskListId);
-	return {taskList, taskListId};
+    console.log(taskListId);
+    return {taskList, taskListId};
 }
 
 export default function DailyTasks() {
-	const {taskList, taskListId} = useLoaderData();
+    const {taskList, taskListId} = useLoaderData();
 
-	const [isTaskAddInputFocus, setIsTaskAddInputFocus] = useState(false);
-	const [inputValue, setInputValue] = useState('');
-	const [tasks, setTasks] = useState(taskList);
-	const [currentSelectedTask, setCurrentSelectedTask] = useState(null);
-	const [isEditorDisplayed, setIsEditorDisplayed] = useState(false);
+    const [isTaskAddInputFocus, setIsTaskAddInputFocus] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+    const [tasks, setTasks] = useState(taskList);
+    const [currentSelectedTask, setCurrentSelectedTask] = useState(null);
+    const [isEditorDisplayed, setIsEditorDisplayed] = useState(false);
 
-	useEffect(() => {
-		setCurrentSelectedTask(null);
-		setIsEditorDisplayed(false);
-	}, [sessionStorage.getItem('currentSelectedTaskList')]);
+    useEffect(() => {
+        setCurrentSelectedTask(null);
+        setIsEditorDisplayed(false);
+    }, [sessionStorage.getItem('currentSelectedTaskList')]);
 
-	useEffect(() => {
-		setTasks(taskList);
-	}, [taskList]);
+    useEffect(() => {
+        setTasks(taskList);
+    }, [taskList]);
 
-	const handleSubmit = async () => {
-		const user = await getUserInfo();
-		const userName = auth.currentUser.displayName !== null ?
-			auth.currentUser.displayName : user.userName;
+    const handleSubmit = async () => {
+        const user = await getUserInfo();
+        const userName = auth.currentUser.displayName !== null ?
+            auth.currentUser.displayName : user.userName;
 
-		//making task
-		const taskObj = {
-			createdBy: userName,
-			taskId: uuid(),
-			taskTitle: inputValue,
-			assignment: [],
-			RepeatCycle: null,
-			isImportant: false,
-			isShared: false,
-			isDaily: true,
-			isCompleted: false,
-			lowRankTasks: [],
-			memo: "",
-			pushNotificationDateTime: Timestamp.fromDate(new Date()),
-			taskDeadLine: Timestamp.fromDate(new Date()),
-			createdAt: Timestamp.fromDate(new Date()),
-		}
-		await createTask(taskObj, taskListId);
+        //making task
+        const taskObj = {
+            createdBy: userName,
+            taskId: uuid(),
+            taskTitle: inputValue,
+            assignment: [],
+            RepeatCycle: null,
+            isImportant: false,
+            isShared: false,
+            isDaily: true,
+            isCompleted: false,
+            lowRankTasks: [],
+            memo: "",
+            pushNotificationDateTime: Timestamp.fromDate(new Date()),
+            taskDeadLine: Timestamp.fromDate(new Date()),
+            createdAt: Timestamp.fromDate(new Date()),
+        }
+        await createTask(taskObj, taskListId);
 
-		setTasks(await getTaskList(taskListId));
-		setInputValue("");
-	}
+        setTasks(await getTaskList(taskListId));
+        setInputValue("");
+    }
 
-	return (
-		<div id='task_content-container' className='flex w-full h-full'>
-			<div id='content-area' className='mx-14 h-full w-full flex flex-col'>
-				<div id='top_content-area' className='flex w-full mt-8'>
-					<div id='task_list-title' className='w-full min-w-200 flex'>
-								<h1 className='text-white text-5xl'>
-									daily Tasks
-								</h1>
-					</div>
-				</div>
-				<div id='bottum_content-area' className='h-full overflow-auto'>
-					<div id='tasks' className='h-5/6 mt-10 overflow-auto pb-1 rounded-md'>
-						<TaskRender
-							userTasks={tasks}
-							setUserTasks={setTasks}
-							setIsEditorDisplayed={setIsEditorDisplayed}
-							currentSelectedTask={currentSelectedTask}
-							setCurrentSelectedTask={setCurrentSelectedTask}
-						/>
-					</div>
-					<div id='task_adder'
-						 className='
+    return (
+        <div id='task_content-container' className='flex w-full h-full'>
+            <div id='content-area' className='mx-14 h-full w-full flex flex-col'>
+                <div id='top_content-area' className='flex w-full mt-8'>
+                    <div id='task_list-title' className='w-full min-w-200 flex'>
+                        <h1 className='text-white text-5xl'>
+                            daily Tasks
+                        </h1>
+                    </div>
+                </div>
+                <div id='bottum_content-area' className='h-full overflow-auto'>
+                    <div id='tasks' className='h-5/6 mt-10 overflow-auto pb-1 rounded-md'>
+                        <TaskRender
+                            userTasks={tasks}
+                            setUserTasks={setTasks}
+                            setIsEditorDisplayed={setIsEditorDisplayed}
+                            currentSelectedTask={currentSelectedTask}
+                            setCurrentSelectedTask={setCurrentSelectedTask}
+                        />
+                    </div>
+                    <div id='task_adder'
+                         className='
                           bg-light_bg_color
                           rounded-md
                           h-14
                           flex
                           items-center'
-					>
-						{
-							isTaskAddInputFocus ?
-								<div className='mr-3 ml-5'>
-									<ChackCircle size='24px' borderWidth='2.5px'/>
-								</div>
-								:
-								<Plus name='icon' width='30' heigth='30' className='mx-3'/>
-						}
-						<Form
-							onSubmit={(e) => {
-								inputValue === "" ? e.preventDefault() : void handleSubmit();
-							}}
-							className='w-full'>
-							<input type='text'
-								   className='
+                    >
+                        {
+                            isTaskAddInputFocus ?
+                                <div className='mr-3 ml-5'>
+                                    <ChackCircle size='24px' borderWidth='2.5px'/>
+                                </div>
+                                :
+                                <Plus name='icon' width='30' heigth='30' className='mx-3'/>
+                        }
+                        <Form
+                            onSubmit={(e) => {
+                                inputValue === "" ? e.preventDefault() : void handleSubmit();
+                            }}
+                            className='w-full'>
+                            <input type='text'
+                                   className='
                                         h-12 w-full
                                         bg-light_bg_color
                                         placeholder-transparent
@@ -133,21 +132,21 @@ export default function DailyTasks() {
                                         border-0
                                         outline-none
                                         '
-								   value={inputValue}
-								   onChange={(e) => setInputValue(e.target.value)}
-								   onFocus={() => setIsTaskAddInputFocus(!isTaskAddInputFocus)}
-								   onBlur={() => setIsTaskAddInputFocus(!isTaskAddInputFocus)}
-								   placeholder='add task'/>
-						</Form>
-					</div>
-				</div>
-			</div>
-			{isEditorDisplayed === true && <TaskEditor
-				setTasks={setTasks}
-				setIsEditorDisplayed={setIsEditorDisplayed}
-				setCurrentSelectedTask={setCurrentSelectedTask}
-				currentSelectedTask={currentSelectedTask}
-			/>}
-		</div>
-	)
+                                   value={inputValue}
+                                   onChange={(e) => setInputValue(e.target.value)}
+                                   onFocus={() => setIsTaskAddInputFocus(!isTaskAddInputFocus)}
+                                   onBlur={() => setIsTaskAddInputFocus(!isTaskAddInputFocus)}
+                                   placeholder='add task'/>
+                        </Form>
+                    </div>
+                </div>
+            </div>
+            {isEditorDisplayed === true && <TaskEditor
+                setTasks={setTasks}
+                setIsEditorDisplayed={setIsEditorDisplayed}
+                setCurrentSelectedTask={setCurrentSelectedTask}
+                currentSelectedTask={currentSelectedTask}
+            />}
+        </div>
+    )
 }

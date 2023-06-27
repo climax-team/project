@@ -18,8 +18,8 @@ export async function action({params}) {
 	return {taskList};
 }
 
-export async function loader({params}) {
-	const taskListId = params.taskListId;
+export async function loader() {
+	const taskListId = 'daily';
 
 	const taskRef = collection(FirestoreDB, auth.currentUser.uid);
 	const Snapshot = await getDocs(taskRef);
@@ -33,7 +33,7 @@ export async function loader({params}) {
 
 	const taskList = allTaskArray.filter(task => task.isDaily === true);
 
-	console.log(taskList);
+	console.log(taskListId);
 	return {taskList, taskListId};
 }
 

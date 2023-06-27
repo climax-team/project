@@ -9,10 +9,7 @@ import {
     updateDoc,
     Timestamp,
     query,
-    where,
-    arrayUnion,
-    arrayRemove,
-    deleteField
+    where
 } from "firebase/firestore";
 import sortBy from "sort-by";
 
@@ -108,34 +105,38 @@ export async function deleteTaskList(taskListId) {
     await deleteDoc(doc(FirestoreDB, auth.currentUser.uid, taskListId));
 }
 
-export async function taskEditFunctionConnector(currentTaskId, workToApply, saveValue) {
-    const taskListRef = doc(FirestoreDB, auth.currentUser.uid, sessionStorage.getItem('currentSelectedTaskList'));
+export async function taskEditFunctionConnector(taskListId, currentTaskId, workToApply, saveValue) {
+    const taskListRef = doc(FirestoreDB, auth.currentUser.uid, taskListId);
     const docSnap = await getDoc(taskListRef);
 
-    const taskListId = docSnap.data().id;
+    console.log(docSnap.data());
     const taskList = docSnap.data().tasks;
     const index = taskList.findIndex(obj => obj.taskId === currentTaskId);
 
     switch (workToApply) {
         case 'delete':
             await deleteTask(index, taskListRef, taskList);
-            console.log('delete');
             break;
         case 'complete':
             await changeTaskToCompleteOrIncomplete(index, taskListRef, taskList);
-            console.log('complete');
             break;
         case 'addToDailyTask':
-            await changeTaskToDailyTaskOrOrdinary(index, taskListRef, taskList, taskListId);
-            console.log('add to daily task');
+            await changeTaskToDailyTaskOrOrdinary(index, taskListRef, taskList);
             break;
         case 'saveMemo':
             await saveTaskMemo(saveValue, index, taskListRef, taskList);
-            console.log('memo saved');
+            break;
+        case 'important':
+            await changeTaskToImportantTaskOrOrdinary(index, taskListRef, taskList);
             break;
         default :
             throw new Error("parameter not found");
     }
+}
+
+async function changeTaskToImportantTaskOrOrdinary(index, taskListRef, taskList) {
+    taskList[index].isImportant = !taskList[index].isImportant;
+    await updateDoc(taskListRef, {'tasks': taskList});
 }
 
 async function saveTaskMemo(memoToSave, index, taskListRef, taskList) {
@@ -151,8 +152,6 @@ async function changeTaskToCompleteOrIncomplete(index, taskListRef, taskList) {
 async function changeTaskToDailyTaskOrOrdinary(index, taskListRef, taskList) {
     taskList[index].isDaily = !taskList[index].isDaily;
     await updateDoc(taskListRef, {'tasks': taskList});
-
-    console.log("a", (await getDoc(taskListRef)).data().taskList);
 }
 
 async function deleteTask(index, taskListRef, taskList) {

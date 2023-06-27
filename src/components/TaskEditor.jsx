@@ -35,7 +35,7 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
         if (!confirm(`"${currentSelectedTask.taskTitle}" will be permanently deleted.`)) {
             e.preventDefault();
         } else {
-            await taskEditFunctionConnector(currentSelectedTask.taskId, 'delete');
+            await taskEditFunctionConnector(taskListId, currentSelectedTask.taskId, 'delete');
             setIsEditorDisplayed(false);
             setCurrentSelectedTask(null);
             setTasks(await getTaskList(taskListId));
@@ -43,14 +43,14 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
     }
 
     const handleAddDailyTaskClick = async () => {
-        await taskEditFunctionConnector(currentSelectedTask.taskId, 'addToDailyTask');
+        await taskEditFunctionConnector(taskListId, currentSelectedTask.taskId, 'addToDailyTask');
 
         setCurrentSelectedTask(await getTask(currentSelectedTask.taskId, taskListId));
         setTasks(await getTaskList(taskListId));
     }
 
     const handleCheckCircleClick = async () => {
-        await taskEditFunctionConnector(currentSelectedTask.taskId, 'complete');
+        await taskEditFunctionConnector(taskListId, currentSelectedTask.taskId, 'complete');
 
         setCurrentSelectedTask(await getTask(currentSelectedTask.taskId, taskListId));
         setTasks(await getTaskList(taskListId));
@@ -62,13 +62,20 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
     }
 
     const handleMemoSave = async () => {
-        await taskEditFunctionConnector(currentSelectedTask.taskId, 'saveMemo', memo);
+        await taskEditFunctionConnector(taskListId, currentSelectedTask.taskId, 'saveMemo', memo);
         setTasks(await getTaskList(taskListId));
     }
 
     const handleResizeHeight = useCallback(() => {
         textRef.current.style.height = textRef.current.scrollHeight + "px";
     }, []);
+
+    const handleStarClick = async (taskId) => {
+        await taskEditFunctionConnector(taskListId, taskId, 'important');
+
+        setCurrentSelectedTask(await getTask(currentSelectedTask.taskId, taskListId));
+        setTasks(await getTaskList(taskListId));
+    }
 
     return (
         <div className='bg-light_bg_color w-full max-w-sm h-full min-w-360 flex flex-col'>
@@ -123,9 +130,17 @@ export function TaskEditor({setTasks, setIsEditorDisplayed, setCurrentSelectedTa
                                 {currentSelectedTask.taskTitle}
                             </span>
                             </div>
-                            <div className='w-3.5 h-3.5 flex items-center justify-center mx-3'>
-                                <Star/>
-                            </div>
+                            <button onClick={() => handleStarClick(currentSelectedTask.taskId)}>
+                                <div className='w-4 h-4 flex items-center justify-center mx-3'>
+                                    {
+                                        currentSelectedTask.isImportant ?
+                                            <Star fill='#9494ff' strok='#9494ff'/>
+                                            :
+                                            <Star fill='#fff' opacity='0.4' strok='#fff'/>
+
+                                    }
+                                </div>
+                            </button>
                         </div>
                     </div>
 

@@ -1,4 +1,4 @@
-import {ReactComponent as EmptyStar} from "../assets/star-empty.svg"
+import {ReactComponent as Star} from "../assets/star-empty.svg"
 import {ReactComponent as CheckMark} from "../assets/checkmark.svg";
 import {ReactComponent as ArrowDown} from "../assets/chevron-down.svg";
 import {ReactComponent as ArrowRight} from "../assets/chevron-right.svg";
@@ -31,14 +31,21 @@ export function TaskRender({
     }
 
     const handleCompleteTaskBtnClick = async (taskId) => {
-        await taskEditFunctionConnector(taskId, 'complete');
+        await taskEditFunctionConnector(taskListId, taskId, 'complete');
 
         if (Boolean(currentSelectedTask)) {
             if (taskId === currentSelectedTask.taskId) {
-            setCurrentSelectedTask(await getTask(taskId, taskListId));
+                setCurrentSelectedTask(await getTask(taskId, taskListId));
             }
         }
 
+        setUserTasks(await getTaskList(taskListId));
+    }
+
+    const handleStarClick = async (taskId) => {
+        await taskEditFunctionConnector(taskListId, taskId, 'important');
+
+        setCurrentSelectedTask(await getTask(taskId, taskListId));
         setUserTasks(await getTaskList(taskListId));
     }
 
@@ -65,7 +72,6 @@ export function TaskRender({
                                 >
                                     <div id='cheacker-radio' className='flex items-center justify-center '>
                                         <button
-
                                             onClick={(event) => {
                                                 event.stopPropagation();
                                                 void handleCompleteTaskBtnClick(task.taskId)
@@ -93,9 +99,22 @@ export function TaskRender({
                                         {task.taskTitle}
                                     </span>
                                     </div>
-                                    <div id='important_star-toggleBtn' className='flex items-center justify-center p-3'>
-                                        <EmptyStar name='icon'/>
-                                    </div>
+                                    <button
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            void handleStarClick(task.taskId);
+                                        }}
+                                        id='important_star-toggleBtn'>
+                                        <div className='flex items-center justify-center p-3'>
+                                            {
+                                                task.isImportant ?
+                                                    <Star fill='#9494ff' strok='#9494ff'/>
+                                                    :
+                                                    <Star fill='#fff' opacity='0.4' strok='#fff'/>
+
+                                            }
+                                        </div>
+                                    </button>
                                 </li>
                             )
                         }
@@ -155,9 +174,22 @@ export function TaskRender({
                                         {task.taskTitle}
                                     </span>
                                     </div>
-                                    <div id='important_star-toggleBtn' className='flex items-center justify-center p-3'>
-                                        <EmptyStar name='icon'/>
-                                    </div>
+                                    <button
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            void handleStarClick(task.taskId);
+                                        }}
+                                        id='important_star-toggleBtn'>
+                                        <div className='flex items-center justify-center p-3'>
+                                            {
+                                                task.isImportant ?
+                                                    <Star fill='#9494ff' strok='#9494ff'/>
+                                                    :
+                                                    <Star fill='#fff' opacity='0.4' strok='#fff'/>
+
+                                            }
+                                        </div>
+                                    </button>
                                 </li>
                             )
                         }

@@ -57,6 +57,7 @@ export default function Task() {
         const taskObj = {
             createdBy: userName,
             taskId: uuid(),
+            taskListId: taskListId,
             taskTitle: inputValue,
             assignment: [],
             RepeatCycle: null,

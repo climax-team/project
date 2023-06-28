@@ -23,6 +23,7 @@ export async function loader({params}) {
     const taskListId = params.taskListId;
     const taskList = await getTaskList(params.taskListId);
 
+    console.log(taskList);
     return {taskList, taskListId};
 }
 
@@ -67,8 +68,8 @@ export default function Task() {
             isCompleted: false,
             lowRankTasks: [],
             memo: "",
-            pushNotificationDateTime: Timestamp.fromDate(new Date()),
-            taskDeadLine: Timestamp.fromDate(new Date()),
+            pushNotificationDateTime: null,
+            taskDeadLine: null,
             createdAt: Timestamp.fromDate(new Date()),
         }
         await createTask(taskObj, taskListId);

@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {
     Form,
     Link,
-    Outlet
+    Outlet, useSubmit
 } from "react-router-dom";
 import {createTaskList, getTaskLists, getTasks, getUserInfo} from "../taskListControler.js";
 
@@ -15,10 +15,6 @@ import {ReactComponent as Calender} from '../assets/calendar.svg'
 import {ReactComponent as Plus} from '../assets/plus.svg'
 import {SearchBar} from "../components/SearchBar.jsx";
 
-export async function action() {
-    const taskList = await createTaskList();
-    return {taskList};
-}
 
 export async function loader({request}) {
     const userAddedTaskLists = await getTaskLists();
@@ -34,7 +30,6 @@ export async function loader({request}) {
 export default function Root() {
     const [currentSelectedTaskList, setCurrentSelectedTaskList] = useState(sessionStorage.getItem('currentSelectedTaskList'));
     sessionStorage.setItem('currentSelectedTaskList', currentSelectedTaskList);
-
 
     return (
         <>
@@ -81,13 +76,13 @@ export default function Root() {
                             <span className='text-white ml-2 text-lg'>Calender</span>
                         </div>
                     </Link>
-                    <Form method="post">
-                        <div className='flex items-center  hover:bg-light_form_color rounded-md'>
+                    <Form onSubmit={async () => await createTaskList()}>
+                        <button type="submit" className='flex items-center w-full hover:bg-light_form_color rounded-md'>
                             <div className='m-2'>
                                 <Plus width='18' height='18'/>
                             </div>
-                            <button type="submit" className='m-2 text-white '>new task list</button>
-                        </div>
+                            <div className='m-2 text-white '>new task list</div>
+                        </button>
                     </Form>
                 </div>
             </div>

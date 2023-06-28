@@ -25,7 +25,6 @@ import {
 } from "react-router-dom";
 
 import Root, {
-    action as rootAction,
     loader as rootLoader,
 } from "./routes/Root.jsx";
 
@@ -53,7 +52,6 @@ function Main() {
         {
             path: "/",
             element: <Root/>,
-            action: rootAction,
             loader: rootLoader,
             children: [
                 {

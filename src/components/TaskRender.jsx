@@ -16,6 +16,7 @@ export function TaskRender({
                            }) {
     const {taskListId} = useLoaderData();
     let currentTaskId = null;
+    console.log('user',userTasks);
     const inCompletedTasks = userTasks.filter(task => task.isCompleted === false);
     const completedTasks = userTasks.filter(task => task.isCompleted === true);
 
@@ -179,14 +180,13 @@ export function TaskRender({
                                             event.stopPropagation();
                                             void handleStarClick(task.taskId);
                                         }}
-                                        id='important_star-toggleBtn'>
-                                        <div className='flex items-center justify-center p-3'>
+                                    >
+                                        <div className='flex items-center justify-center p-3 '>
                                             {
                                                 task.isImportant ?
                                                     <Star fill='#9494ff' strok='#9494ff'/>
                                                     :
                                                     <Star fill='#fff' opacity='0.4' strok='#fff'/>
-
                                             }
                                         </div>
                                     </button>

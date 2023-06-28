@@ -32,7 +32,7 @@ export async function loader() {
 
     const taskList = allTaskArray.filter(task => task.isDaily === true);
 
-    console.log(taskListId);
+    console.log(taskList);
     return {taskList, taskListId};
 }
 
@@ -72,8 +72,8 @@ export default function DailyTasks() {
             isCompleted: false,
             lowRankTasks: [],
             memo: "",
-            pushNotificationDateTime: Timestamp.fromDate(new Date()),
-            taskDeadLine: Timestamp.fromDate(new Date()),
+            pushNotificationDateTime: null,
+            taskDeadLine: null,
             createdAt: Timestamp.fromDate(new Date()),
         }
         await createTask(taskObj, taskListId);

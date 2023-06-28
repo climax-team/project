@@ -12,6 +12,7 @@ import {
     where
 } from "firebase/firestore";
 import sortBy from "sort-by";
+import moment from "moment";
 
 export async function getUserInfo() {
     const userInfoDocRef = doc(FirestoreDB, "user", auth.currentUser.uid);
@@ -33,8 +34,6 @@ export async function createTaskList() {
 
     const userTaskListsRef = doc(FirestoreDB, auth.currentUser.uid, id);
     await setDoc(userTaskListsRef, addedTaskList);
-
-    return await getTaskLists();
 }
 
 export async function getTask(taskId, taskListId) {
@@ -105,11 +104,12 @@ export async function deleteTaskList(taskListId) {
     await deleteDoc(doc(FirestoreDB, auth.currentUser.uid, taskListId));
 }
 
+
+
 export async function taskEditFunctionConnector(taskListId, currentTaskId, workToApply, saveValue) {
     const taskListRef = doc(FirestoreDB, auth.currentUser.uid, taskListId);
     const docSnap = await getDoc(taskListRef);
 
-    console.log(docSnap.data());
     const taskList = docSnap.data().tasks;
     const index = taskList.findIndex(obj => obj.taskId === currentTaskId);
 
@@ -129,9 +129,23 @@ export async function taskEditFunctionConnector(taskListId, currentTaskId, workT
         case 'important':
             await changeTaskToImportantTaskOrOrdinary(index, taskListRef, taskList);
             break;
+        case 'setDeadLine':
+            await saveDeadLine(index, taskListRef, taskList, saveValue);
+            break;
+        case 'removeDeadLine':
+            await removeDeadLine(index, taskListRef, taskList, saveValue);
+            break;
         default :
             throw new Error("parameter not found");
     }
+}
+async function removeDeadLine(index, taskListRef, taskList, saveValue) {
+    taskList[index].taskDeadLine = null;
+    await updateDoc(taskListRef, {'tasks': taskList});
+}
+async function saveDeadLine(index, taskListRef, taskList, saveValue) {
+    taskList[index].taskDeadLine = Timestamp.fromDate(new Date(saveValue));
+    await updateDoc(taskListRef, {'tasks': taskList});
 }
 
 async function changeTaskToImportantTaskOrOrdinary(index, taskListRef, taskList) {
